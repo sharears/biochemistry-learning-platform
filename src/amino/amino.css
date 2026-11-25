@@ -1,0 +1,128 @@
+/* Topic-first undergraduate textbook experience. Namespaced from legacy styles. */
+.aa-page{min-width:0;color:#294e43}
+.aa-label{font-size:10px;font-weight:800;color:#34866b;letter-spacing:.13em;display:block}
+.aa-breadcrumbs{display:flex;gap:9px;align-items:center;flex-wrap:wrap;color:#819b8e;font-size:11px;margin-bottom:19px}
+.aa-breadcrumbs button{border:0;background:none;padding:0;color:#35876a;font-size:inherit;font-weight:700}
+.aa-chapter-hero,.aa-topic-hero{padding:34px 38px;border-radius:16px;background:linear-gradient(115deg,#163f43,#236458);color:#fff}
+.aa-chapter-hero .aa-label,.aa-topic-hero .aa-label{color:#a9dec6}
+.aa-chapter-hero h1,.aa-topic-hero h1{font-size:clamp(29px,3.3vw,41px);letter-spacing:-.035em;line-height:1.2;margin:14px 0}
+.aa-chapter-hero p,.aa-topic-hero p{color:#c4dfd3;font-size:13px;max-width:770px;line-height:1.8}
+.aa-chapter-hero>div,.aa-topic-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:23px}
+.aa-chapter-hero>div span,.aa-topic-meta span{border-radius:24px;border:1px solid #a6dbc244;padding:8px 11px;color:#bbebd2;font-size:10px}
+.aa-chapter-intro{margin:35px 0 16px}.aa-chapter-intro h2{color:#2d5c48;font-size:24px}.aa-chapter-intro p{margin-top:6px;color:#79968a;font-size:12px}
+.aa-topic-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.aa-topic-cards button{display:flex;flex-direction:column;min-height:223px;background:#fff;border:1px solid #dfeae3;border-radius:13px;text-align:left;padding:23px;color:#36634f;transition:border-color .15s}
+.aa-topic-cards button:hover{border-color:#7fc39f}
+.aa-topic-cards button:last-child:nth-child(odd){grid-column:1/-1}
+.aa-topic-number{font-size:11px;color:#39896c;font-weight:800;margin-bottom:12px}
+.aa-topic-cards strong{font-size:17px;color:#2f5c48;line-height:1.4}
+.aa-topic-cards p{font-size:12px;color:#7b9485;margin:11px 0 16px;line-height:1.7}
+.aa-topic-card-foot{display:flex;justify-content:space-between;gap:12px;width:100%;color:#90a69a;font-size:11px;margin-top:auto;padding-top:15px;border-top:1px solid #e5eee8}
+.aa-topic-card-foot b{color:#298a64}
+.aa-stage-tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:21px 0 27px}
+.aa-stage-tabs button{background:#fff;border:1px solid #e0eae3;border-radius:11px;padding:14px 6px;color:#759183;font-weight:750;font-size:12px}
+.aa-stage-tabs button span{margin-right:8px;color:#a0b5a6;font-size:10px}
+.aa-stage-tabs button.current{background:#e2f3e9;color:#197858;border-color:#9dcfb2}
+.aa-stage-tabs button.current span{color:#278d68}
+.aa-stage-intro{margin:6px 0 20px}
+.aa-stage-intro h2{font-size:25px;color:#2b5d47;letter-spacing:-.02em;margin:10px 0}
+.aa-stage-intro p{font-size:13px;color:#718f80;line-height:1.9}
+.aa-stage-intro.interactive{margin-top:31px}
+.aa-learning-card,.aa-lab,.aa-molecule-card,.aa-picker,.aa-question,.aa-prompt-card,.aa-completion,.aa-progress-summary{border:1px solid #dfeae3;background:#fff;border-radius:13px;padding:23px;margin-bottom:16px}
+.aa-learning-card h3{font-size:19px;color:#2d6049;margin-bottom:17px}
+.aa-point{display:flex;gap:14px;border-top:1px solid #e9f1ec;padding:13px 0}
+.aa-point span{font-size:11px;color:#29946d;font-weight:800}
+.aa-point p{font-size:13px;line-height:1.75;color:#668675}
+.aa-prompt-card{border-left:4px solid #70b691;background:#f2faf4}
+.aa-prompt-card strong{font-size:13px;color:#3e7b5c}
+.aa-prompt-card p{font-size:13px;color:#64816e;margin-top:9px}
+.aa-picker-top{display:flex;justify-content:space-between;align-items:end;gap:18px}
+.aa-picker h3,.aa-lab h3{font-size:20px;color:#315b49;margin:8px 0 14px}
+.aa-picker-top label{font-size:11px;color:#759385;font-weight:650}
+.aa-picker select,.aa-lab select,.aa-peptide-controls select{display:block;margin-top:6px;background:#fff;border:1px solid #cbded2;border-radius:8px;color:#426c55;padding:10px;font-size:12px;max-width:100%;min-height:38px}
+.aa-letter-grid{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:7px;margin:20px 0}
+.aa-letter-grid button{display:flex;flex-direction:column;gap:3px;align-items:center;border-radius:9px;border:1px solid #dce9df;background:#f8fbf9;padding:8px 2px;color:#5e886e;min-width:0}
+.aa-letter-grid button.active{background:#dff2e7;border-color:#59aa7a}
+.aa-letter-grid button strong{font-size:18px}.aa-letter-grid button small{font-size:9px;color:#88a495}
+.aa-profile{display:flex;justify-content:space-between;gap:18px;background:#f2f8f3;border-radius:9px;padding:16px}
+.aa-profile>div:first-child{flex:2}
+.aa-profile h4{font-size:19px;color:#2d664c;margin:7px 0}
+.aa-profile p{color:#658370;font-size:12px}
+.aa-profile>div:last-child{flex:1;min-width:105px}.aa-profile>div:last-child strong{display:block;margin-top:10px;font-size:12px;color:#4a745d}
+.aa-molecule-card{overflow:hidden;padding:19px}
+.aa-mol-header{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:15px}
+.aa-mol-header strong{font-size:17px;color:#285e4a}.aa-mol-header strong span{font-size:11px;color:#91a89b;font-weight:500}
+.aa-mol-header p{font-size:12px;color:#81998a;margin-top:5px}
+.aa-view-toggle,.aa-mod-toggle{display:flex;gap:5px;background:#edf4ef;border-radius:10px;padding:4px;white-space:nowrap}
+.aa-view-toggle button,.aa-mod-toggle button{border:0;border-radius:7px;padding:8px 14px;background:transparent;color:#69927d;font-size:11px;font-weight:750}
+.aa-view-toggle button.active,.aa-mod-toggle button.active{background:#fff;color:#217d5d;box-shadow:0 2px 5px #286b4520}
+.aa-mol-canvas{background:#f8fbf9;border:1px solid #e3efe7;border-radius:11px;overflow:hidden;position:relative}
+.aa-mol-canvas svg{display:block;width:100%;max-height:360px}
+.aa-mol-watermark{position:absolute;bottom:9px;left:12px;color:#9eafa5;font-size:10px;pointer-events:none}
+.aa-mol-controls{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:13px 0;flex-wrap:wrap}
+.aa-element-legend{display:flex;align-items:center;gap:13px}
+.aa-element-legend span{display:flex;gap:6px;align-items:center;color:#789285;font-size:10px}
+.aa-element-legend i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.aa-rotation-buttons{display:flex;gap:6px}.aa-rotation-buttons button{width:32px;height:30px;border:1px solid #d5e5d8;border-radius:7px;background:white;color:#347b60}
+.aa-atom-detail{padding:10px;border-radius:8px;background:#e8f7ee;color:#43745b;font-size:11px!important}
+.aa-mol-disclaimer,.aa-scope{font-size:10px!important;line-height:1.7!important;color:#8aa195!important;margin-top:14px}
+.aa-lab h3{margin-top:8px}
+.aa-lab>p,.aa-lab-title p{font-size:12px;color:#749081;margin:8px 0 18px}
+.aa-lab-title{display:flex;justify-content:space-between;align-items:start;gap:12px}
+.aa-ph-number{background:#e6f4e9;border-radius:10px;padding:11px 17px;color:#377959;font-size:11px;white-space:nowrap}
+.aa-ph-number strong{display:block;font-size:27px}
+.aa-input-label{display:block;color:#527c65;font-size:11px;font-weight:750;margin:17px 0 7px}
+.aa-lab input[type=range]{width:100%;margin-top:13px;accent-color:#278867}
+.aa-range-scale{display:flex;justify-content:space-between;color:#93a89a;font-size:10px}
+.aa-charge-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:21px 0}
+.aa-charge-metrics>div{background:#f0f7f2;border:1px solid #e3eee4;border-radius:9px;padding:15px 10px;min-width:0}
+.aa-charge-metrics small{display:block;font-size:9px;font-weight:750;color:#7fa28a;letter-spacing:.08em}
+.aa-charge-metrics strong{font-size:25px;color:#277d60;display:block;margin-top:10px}
+.aa-charge-metrics .aa-charge-word{font-size:13px;line-height:1.6}
+.aa-lab-pka{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.aa-lab-pka strong{font-size:11px;color:#55816b}.aa-lab-pka span{font-size:10px;background:#f4f8f5;padding:6px 9px;border-radius:7px;color:#6f9980}
+.aa-peptide-controls{display:flex;align-items:end;gap:8px;flex-wrap:wrap;margin:20px 0}
+.aa-peptide-controls label{font-size:11px;color:#718f7b;font-weight:700}
+.aa-peptide-controls button,.aa-numeric-form button{border:1px solid #92c3a7;color:#217b5a;background:#edf7f0;border-radius:8px;padding:10px 12px;font-size:11px;font-weight:750;min-height:38px}
+.aa-peptide-controls button:disabled,.aa-numeric-form button:disabled{opacity:.45;cursor:not-allowed}
+.aa-chain{display:flex;align-items:center;gap:7px;overflow:auto;background:#f5faf6;border-radius:10px;padding:18px 12px;margin-bottom:15px;min-height:105px}
+.aa-residue{border-radius:9px;border:1px solid #9bc7aa;background:#fff;min-width:58px;display:grid;place-items:center;gap:4px;padding:10px 7px;color:#3b7e5c}
+.aa-residue strong{font-size:13px}.aa-residue small{color:#83a58e;font-size:10px}
+.aa-peptide-link{display:flex;flex-direction:column;align-items:center;color:#59836b;gap:3px;flex:0 0 45px}
+.aa-peptide-link small{font-size:8px}
+.aa-terminus{font-size:13px;color:#29795a;flex-shrink:0}
+.aa-chain-metrics{display:flex;gap:15px;flex-wrap:wrap;font-size:11px;color:#719383}
+.aa-chain-metrics strong{color:#337657}
+.aa-mod-toggle{display:inline-flex;margin:20px 0 12px}
+.aa-mod-display{background:#edf7f1;border-radius:10px;padding:23px;min-height:105px}
+.aa-mod-display span{display:block;color:#6b9e7d;font-size:10px;font-weight:800;letter-spacing:.1em;margin-bottom:12px}
+.aa-mod-display strong{color:#286848;font-size:clamp(14px,2vw,20px);overflow-wrap:anywhere}
+.aa-practice-status{border-radius:9px;background:#e4f5ea;color:#2b805b;padding:13px 16px;font-size:12px;margin-bottom:15px;font-weight:750}
+.aa-question{margin-top:0}
+.aa-question h3{color:#2d5b46;font-size:18px;margin:12px 0 18px}
+.aa-question>p{font-size:13px;color:#718e7c;margin-bottom:15px}
+.aa-answer-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.aa-answer-grid button{display:flex;align-items:center;gap:10px;border:1px solid #dee9e1;background:#fff;border-radius:9px;color:#507960;text-align:left;padding:11px;font-size:12px;min-width:0}
+.aa-answer-grid button.active{background:#e6f5e9;border-color:#87bda0}
+.aa-answer-grid button strong{flex-shrink:0;border-radius:5px;background:#eef5ef;padding:7px 10px}
+.aa-feedback{padding:14px;margin-top:13px;border-radius:8px;font-size:12px}
+.aa-feedback p{font-size:12px;margin-top:6px}
+.aa-feedback.good{background:#e6f7e9;color:#276f4c}
+.aa-feedback.try{background:#fff5e7;color:#9b764a}
+.aa-numeric-form{display:flex;align-items:center;gap:11px;flex-wrap:wrap}
+.aa-numeric-form label{font-size:12px;font-weight:700;color:#47765d}
+.aa-numeric-form input{width:128px;border:1px solid #bed9c8;border-radius:8px;padding:10px 12px;font-size:13px}
+.aa-review-check{display:flex;align-items:flex-start;gap:13px;padding:15px 10px;border-top:1px solid #e4eee6;font-size:13px;color:#5e7b69;line-height:1.7;cursor:pointer}
+.aa-review-check input{accent-color:#27936c;margin-top:6px}
+.aa-progress-summary{background:#f0f8f2;font-size:12px;color:#367659}
+.aa-progress-summary p{color:#7a9684;margin-top:6px;font-size:11px}
+.aa-completion{display:flex;justify-content:space-between;align-items:center;gap:13px;margin-top:24px;background:#edf8f0}
+.aa-completion strong{font-size:13px;color:#2e7854}
+.aa-completion p{font-size:11px;color:#7f9b86;margin-top:6px}
+.aa-completion button{background:#1f8665;color:white;border:1px solid #1f8665;border-radius:8px;padding:12px 16px;font-size:12px;font-weight:750;white-space:nowrap}
+.aa-completion button.marked{background:#d0ebd8;color:#26724f;border-color:#b6ddc6}
+.aa-next-row{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:25px 0}
+.aa-next-row button{border:1px solid #b9d9c4;border-radius:8px;background:white;color:#3d8663;padding:12px 14px;font-size:12px;font-weight:750}
+.aa-next-row button.aa-primary-next{background:#298767;color:white;border-color:#298767}
+@media(max-width:1100px){.aa-letter-grid{grid-template-columns:repeat(7,minmax(0,1fr))}}
+@media(max-width:740px){.aa-chapter-hero,.aa-topic-hero{padding:25px}.aa-letter-grid{grid-template-columns:repeat(10,minmax(0,1fr))}}
+@media(max-width:560px){.aa-topic-cards{grid-template-columns:1fr}.aa-topic-cards button:last-child:nth-child(odd){grid-column:auto}.aa-letter-grid{grid-template-columns:repeat(5,minmax(0,1fr))}.aa-stage-tabs{gap:3px}.aa-stage-tabs button{font-size:10px;padding:11px 2px}.aa-stage-tabs button span{display:block;margin:0 0 5px}.aa-picker-top,.aa-profile,.aa-lab-title{display:block}.aa-picker-top label{display:block;margin-top:12px}.aa-profile>div:last-child{margin-top:18px}.aa-answer-grid{grid-template-columns:1fr}.aa-charge-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.aa-mol-header{align-items:flex-start}.aa-mol-header strong{font-size:14px}.aa-view-toggle button{padding:7px 10px}.aa-completion{align-items:stretch;flex-direction:column}.aa-chain{gap:4px}.aa-peptide-link{flex-basis:35px}}

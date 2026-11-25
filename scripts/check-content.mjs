@@ -1,4 +1,7 @@
 import assert from 'node:assert/strict';
+import {topicsForChapter,findTopic,learningStages} from '../src/topicCatalog.js';
+import {aminoAcids,aminoLesson,netCharge,isoelectricPoint} from '../src/amino/aminoData.js';
+import {moleculeGraphs} from '../src/amino/moleculeGraphs.js';
 import {parts,chapters,pathwayCatalog,metabolicCategories} from '../src/courseCatalog.js';
 import {glycolysis,sumEnergy} from '../src/metabolism/pathways.js';
 
@@ -42,3 +45,42 @@ for(const p of pathwayCatalog){
   assert(chapters.some(c=>c.number===p.chapter),'Pathway links to missing chapter '+p.chapter);
 }
 console.log('Content checks passed: 28 chapters, 16 pathway entries, 10 glycolysis steps, balanced ATP/NADH accounting.');
+
+/* Topic-first curriculum contract */
+assert.equal(learningStages.map(s=>s.id).join(','),'learn,explore,practice,apply,review');
+for(let n=1;n<=28;n++){
+ const t=topicsForChapter(n);
+ assert(t.length>=3,'Chapter '+n+' needs multiple topics');
+ assert.equal(new Set(t.map(x=>x.id)).size,t.length,'Unique topic IDs for chapter '+n);
+ for(const topic of t){
+  assert(topic.title&&topic.number.startsWith(n+'.'),'Invalid topic structure');
+  assert.equal(findTopic(n,topic.id).id,topic.id);
+ }
+}
+const topics=topicsForChapter(4);
+assert.equal(topics.length,5);
+for(const t of topics){
+ const lesson=aminoLesson[t.id];
+ assert(lesson,'Topic 4.'+t.id+' missing lesson content');
+ assert(lesson.points.length>=4,'Insufficient learning notes for '+t.id);
+ assert(lesson.key.length>=3,'Missing review takeaways for '+t.id);
+ assert(lesson.questions.length>=2,'Missing practice questions for '+t.id);
+ assert(lesson.apply,'Missing application for '+t.id);
+ for(const q of lesson.questions){
+  assert(q.options.length>=3&&q.correct>=0&&q.correct<q.options.length,'Bad question choices');
+ }
+}
+assert.equal(aminoAcids.length,20,'20 standard amino acids');
+assert.equal(new Set(aminoAcids.map(x=>x.one)).size,20,'Unique residue codes');
+assert.equal(Object.keys(moleculeGraphs).length,20,'2D and 3D molecular data for all 20');
+for(const a of aminoAcids){
+ const [atoms,bonds]=moleculeGraphs[a.one]||[];
+ assert(Array.isArray(atoms)&&atoms.length>3,'Atom data for '+a.one);
+ assert(Array.isArray(bonds)&&bonds.length>2,'Bond data for '+a.one);
+ assert(atoms.every(atom=>atom.length===7&&atom.slice(2).every(Number.isFinite)),'Invalid molecular coords '+a.one);
+ assert(bonds.every(([i,j,order])=>Number.isInteger(i)&&Number.isInteger(j)&&i>=0&&j>=0&&i<atoms.length&&j<atoms.length&&i!==j&&[2,3,4].includes(order)),'Invalid bonds '+a.one);
+}
+assert(Math.abs(isoelectricPoint('G')-5.97)<.005);
+assert(netCharge('G',2)>0.5&&netCharge('G',12)<-.95);
+assert(netCharge('D',7)<-0.9&&netCharge('K',7)>0.9);
+console.log('Topic checks passed: all 28 chapters contain topics, 5 amino-acid lessons, 20 2D/3D structures, and charge/pI models.');

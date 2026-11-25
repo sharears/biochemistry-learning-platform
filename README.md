@@ -77,3 +77,23 @@ The Vite base path is `/biochemistry-learning-platform/`, and GitHub Actions dep
 Expected site: https://sharears.github.io/biochemistry-learning-platform/
 
 Progress is stored only in browser `localStorage`. There are **no student accounts, instructor accounts, server-side grades, or cross-device synchronization**. Do not rely on it for official course records without an appropriate privacy, security, accessibility, and university policy review.
+
+
+## v0.3 — Topic-first course structure (November 2026)
+
+This revision implements **Part → Chapter → Topic** in the left sidebar and puts
+**Learn · Explore · Practice · Apply · Review tabs INSIDE each topic**.
+
+- Every chapter has an editable topic outline in \`src/topicCatalog.js\`. Planned chapters display topic pages honestly marked as planned.
+- Chapter 4 now opens a chapter index listing **five fully interactive amino-acid topics**. Each topic has five working learning stages, its own practice questions, an application problem, and review checkboxes.
+- In Learn, interactive chemistry is embedded next to the explanations. The same interactive components are reused in Explore for independent investigation.
+- **2D connectivity and rotatable 3D ball-and-stick models of all 20 standard free amino acids**, generated offline from RDKit depictions/ETKDG conformers. The 3D conformers are illustrative and computational, not experimentally determined. Explicit H and stereochemical wedge/dash bonds are not drawn in 2D.
+- Topic modules include side-chain comparisons, acid-base pH/charge exploration, a peptide-sequence builder, and side-chain modification comparisons.
+- Student responses and marked stages save to browser \`localStorage\` under \`biochem-topics-v1\` (no account or cloud sync). The original Chapter 4 files remain in the repository and its older \`biochem-chapter4-v1\` progress is preserved but not automatically migrated.
+- Glycolysis is accessible from **Chapter 14 → Glycolysis reaction pathway → Learn**, while old direct tool URLs continue to work as compatibility links. The metabolic pathway implementation was not replaced.
+- The navigation no longer requires a standalone Interactive Tools menu; components are reusable code and appear in relevant learning topics.
+
+**Source files:** \`src/amino/AminoChapter.jsx\`, \`src/amino/MoleculeViewer.jsx\`,
+\`src/amino/aminoData.js\`, \`src/amino/moleculeGraphs.js\`, \`src/amino/amino.css\`, and \`src/topicCatalog.js\`.
+
+This is still a teaching prototype. Its 3D conformers show an example geometry, not the distribution of molecular conformations in solution. Its simple acid-base calculations are for free amino acids, not peptide residues or experimental titration curves.

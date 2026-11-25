@@ -1,5 +1,6 @@
 import React,{useEffect,useMemo,useState} from 'react';
-import Chapter4 from './Chapter4.jsx';
+import AminoChapter from './amino/AminoChapter.jsx';
+import {topicsForChapter,findTopic,learningStages} from './topicCatalog.js';
 import MetabolicExplorer from './metabolism/MetabolicExplorer.jsx';
 import {parts,chapters,toolGroups,pathwayCatalog,metabolicCategories} from './courseCatalog.js';
 import './styles.css';
@@ -8,7 +9,6 @@ import './platform.css';
 const PLATFORM_NAV=[
  {path:'/home',label:'Home',icon:'⌂'},
  {path:'/chapters',label:'Textbook',icon:'▤'},
- {path:'/tools',label:'Interactive Tools',icon:'✧'},
  {path:'/practice',label:'Practice',icon:'✓'},
  {path:'/progress',label:'My Progress',icon:'◉'},
  {path:'/library',label:'Reference Library',icon:'▥'}
@@ -31,6 +31,51 @@ function ToolCard({tool,navigate}){
    <strong>{tool.name}</strong><p>{tool.description}</p><span className="pl-card-link">{tool.status==='active'?'Open tool →':'Preview plan →'}</span>
  </button>;
 }
+
+/* Expandable left-hand course outline. Learning stages live IN each topic page. */
+function CourseTree({route,navigate}){
+ const[opened,setOpened]=useState({biomolecules:true});
+ const[chaptersOpened,setChaptersOpened]=useState({4:true});
+ const[mobileOpen,setMobileOpen]=useState(false);
+ const match=route.match(/^\/chapters\/(\d+)(?:\/topics\/([^/]+))?/);
+ const selectedNumber=match?Number(match[1]):null;
+ const selectedTopic=match?.[2]||null;
+ const currentChapter=chapters.find(c=>c.number===selectedNumber);
+ useEffect(()=>{
+  if(!currentChapter)return;
+  setOpened(s=>s[currentChapter.partId]?s:{...s,[currentChapter.partId]:true});
+  setChaptersOpened(s=>s[selectedNumber]?s:{...s,[selectedNumber]:true});
+ },[selectedNumber,currentChapter?.partId]);
+ return <div className="pl-course-outline">
+  <div className="pl-side-group">COURSE CONTENTS</div>
+  <button className="pl-mobile-tree-toggle" onClick={()=>setMobileOpen(v=>!v)} aria-expanded={mobileOpen}>
+   {mobileOpen?'Hide course outline':'Browse parts, chapters & topics'} <span>{mobileOpen?'⌃':'⌄'}</span>
+  </button>
+  <nav className={'pl-tree-nav '+(mobileOpen?'mobile-open':'')} aria-label="Part, chapter, and topic outline">
+   {parts.map(part=><div className="pl-tree-part" key={part.id}>
+    <button className={'pl-tree-part-button '+(opened[part.id]?'expanded':'')} onClick={()=>setOpened(s=>({...s,[part.id]:!s[part.id]}))} aria-expanded={!!opened[part.id]}>
+     <span className="pl-tree-arrow">{opened[part.id]?'▾':'▸'}</span><span>Part {part.number} · {part.short}</span>
+    </button>
+    {opened[part.id]&&<div className="pl-tree-chapters">{part.chapters.map(ch=><div key={ch.number}>
+      <div className={'pl-tree-chapter-row '+(selectedNumber===ch.number?'selected':'')}>
+       <button className="pl-tree-chapter-name" onClick={()=>{setChaptersOpened(s=>({...s,[ch.number]:true}));navigate('/chapters/'+ch.number);}} aria-current={selectedNumber===ch.number&&!selectedTopic?'page':undefined}>
+        <span>{String(ch.number).padStart(2,'0')}</span>{ch.title}
+       </button>
+       <button className="pl-tree-chapter-toggle" onClick={()=>setChaptersOpened(s=>({...s,[ch.number]:!s[ch.number]}))} aria-label={(chaptersOpened[ch.number]?'Collapse':'Expand')+' topics in chapter '+ch.number} aria-expanded={!!chaptersOpened[ch.number]}>{chaptersOpened[ch.number]?'⌄':'›'}</button>
+      </div>
+      {chaptersOpened[ch.number]&&<div className="pl-tree-topics">{topicsForChapter(ch.number).map(t=><button key={t.id}
+       className={selectedNumber===ch.number&&selectedTopic===t.id?'active':''}
+       aria-current={selectedNumber===ch.number&&selectedTopic===t.id?'page':undefined}
+       onClick={()=>navigate('/chapters/'+ch.number+'/topics/'+t.id+'/learn')}>
+       <small>{t.number}</small><span>{t.title}</span>
+      </button>)}</div>}
+    </div>)}</div>}
+   </div>)}
+  </nav>
+  <p className="pl-tree-hint">Select a topic, then use Learn · Explore · Practice · Apply · Review inside its page.</p>
+ </div>;
+}
+
 function Home({navigate}){
  return <>
   <div className="pl-hero">
@@ -45,7 +90,7 @@ function Home({navigate}){
   <div className="pl-section-head"><div><span className="pl-eyebrow">START EXPLORING</span><h2>Pick up where curiosity leads</h2></div></div>
   <div className="pl-feature-grid">
    <button className="pl-feature-card chapter-feature" onClick={()=>navigate('/chapters/4')}><span className="pl-card-pre">FEATURED CHAPTER · AVAILABLE</span><span className="pl-feature-icon">C</span><h3>04 — Amino Acids and Their Properties</h3><p>Five learning stages, a pH explorer, starter questions, and an isoelectric-point exercise.</p><span className="pl-card-link">Open Chapter 4 →</span></button>
-   <button className="pl-feature-card metabolism-feature" onClick={()=>navigate('/tools/metabolism/glycolysis')}><span className="pl-card-pre">INTERACTIVE TOOL · AVAILABLE</span><span className="pl-feature-icon">↗</span><h3>Glycolysis: 10 reactions to explore</h3><p>Click metabolites and enzymes, follow the sequence, and track ATP and NADH per glucose.</p><span className="pl-card-link">Launch pathway explorer →</span></button>
+   <button className="pl-feature-card metabolism-feature" onClick={()=>navigate('/chapters/14/topics/glycolysis/learn')}><span className="pl-card-pre">INTERACTIVE TOOL · AVAILABLE</span><span className="pl-feature-icon">↗</span><h3>Glycolysis: 10 reactions to explore</h3><p>Click metabolites and enzymes, follow the sequence, and track ATP and NADH per glucose.</p><span className="pl-card-link">Open glycolysis lesson →</span></button>
   </div>
   <div className="pl-section-head"><div><span className="pl-eyebrow">COURSE ORGANIZATION</span><h2>Six connected areas of biochemistry</h2></div><button onClick={()=>navigate('/chapters')} className="pl-text-link">Full table of contents ↗</button></div>
   <div className="pl-parts-mini">{parts.map(part=><button key={part.id} onClick={()=>navigate('/chapters?part='+part.id)}>
@@ -76,9 +121,12 @@ function ChapterPreview({number,navigate}){
  return <>
   <div className="pl-crumb"><button onClick={()=>navigate('/chapters')}>Textbook</button> / {part.title} / Chapter {number}</div>
   <div className="pl-outline-hero"><span className="pl-eyebrow">CHAPTER {String(number).padStart(2,'0')} · OUTLINE PREVIEW</span><h1>{chapter.title}</h1><p>This chapter has a reserved place in the textbook. Lessons, figures, problems, and full content can be added using the consistent five-stage structure below.</p><span className="pl-status-box">Planned chapter · content not yet written</span></div>
-  <div className="pl-section-head"><div><span className="pl-eyebrow">REUSABLE LEARNING SEQUENCE</span><h2>Five stages in every chapter</h2></div></div>
-  <div className="pl-stage-grid">{[['01','Learn','Reading, facts, diagrams, equations'],['02','Explore','Relevant simulations and molecular tools'],['03','Practice','Short questions with feedback'],['04','Apply','Calculations, data, and cases'],['05','Review','Summaries and self-assessment']].map(s=><div key={s[0]}><span>{s[0]}</span><strong>{s[1]}</strong><p>{s[2]}</p></div>)}</div>
-  {number===14&&<div className="pl-chapter-connection"><div><span className="pl-eyebrow">CONNECTED INTERACTIVE TOOL · AVAILABLE NOW</span><h3>Glycolysis Explorer</h3><p>While the Chapter 14 reading content is still planned, the metabolic map with all ten reactions is ready for review.</p></div><ArrowButton onClick={()=>navigate('/tools/metabolism/glycolysis')}>Open glycolysis</ArrowButton></div>}
+  <div className="pl-section-head"><div><span className="pl-eyebrow">CHAPTER TOPICS</span><h2>Choose a topic to study</h2></div></div>
+  <div className="pl-chapter-grid">{topicsForChapter(number).map(t=><button key={t.id} className="pl-chapter-card" onClick={()=>navigate('/chapters/'+number+'/topics/'+t.id+'/learn')}>
+   <span className="pl-chapter-no">TOPIC {t.number}</span><strong>{t.title}</strong><span className="pl-chapter-foot">{number===14&&t.id==='glycolysis'?'Interactive pathway lesson':'Topic structure planned'} <span>→</span></span>
+  </button>)}</div>
+  <div className="pl-educator-note"><span className="pl-note-symbol">◉</span><div><strong>Every topic has five learning sections</strong><p>Learn, Explore, Practice, Apply, and Review are inside the topic, not independent chapters. Full content is being developed topic by topic.</p></div></div>
+  {number===14&&<div className="pl-chapter-connection"><div><span className="pl-eyebrow">CONNECTED INTERACTIVE TOOL · AVAILABLE NOW</span><h3>Glycolysis Explorer</h3><p>While the Chapter 14 reading content is still planned, the metabolic map with all ten reactions is ready for review.</p></div><ArrowButton onClick={()=>navigate('/chapters/14/topics/glycolysis/learn')}>Open glycolysis topic</ArrowButton></div>}
   {number!==14&&number>=13&&number<=22&&<div className="pl-educator-note"><span className="pl-note-symbol">◎</span><div><strong>Metabolism chapters share one Explorer</strong><p>The metabolic pathway modules will be linked from their respective chapters as they are implemented.</p><button className="pl-text-link" onClick={()=>navigate('/tools/metabolism')}>Explore the pathway roadmap ↗</button></div></div>}
  </>;
 }
@@ -132,18 +180,34 @@ function PlannedPathway({id,navigate}){
   <div className="pl-inline-actions"><ArrowButton onClick={()=>navigate('/tools/metabolism/glycolysis')}>Explore working prototype</ArrowButton><ArrowButton secondary onClick={()=>navigate('/tools/metabolism')}>Back to pathway library</ArrowButton></div></div>
  </>;
 }
+
+function TopicPreview({number,topicId,stageId,navigate}){
+ const chapter=chapters.find(c=>c.number===number);
+ const topic=findTopic(number,topicId);
+ if(!chapter||!topic)return <NotFound navigate={navigate}/>;
+ const active=learningStages.some(s=>s.id===stageId)?stageId:'learn';
+ const isGlycolysis=number===14&&topic.id==='glycolysis';
+ return <div className="pl-topic-placeholder">
+  <div className="pl-crumb"><button onClick={()=>navigate('/chapters')}>Textbook</button> / <button onClick={()=>navigate('/chapters/'+number)}>Chapter {number}</button> / Topic {topic.number}</div>
+  <div className="pl-outline-hero"><span className="pl-eyebrow">PART {parts.find(p=>p.id===chapter.partId)?.number} · CHAPTER {number} · TOPIC {topic.number}</span><h1>{topic.title}</h1><p>{isGlycolysis?'Explore all ten reactions through the existing interactive glycolysis module embedded in the course structure.':'This topic is part of the course outline. Educational content and interactive activities for this topic are planned.'}</p></div>
+  <div className="pl-topic-stage-tabs" role="group" aria-label="Topic learning sections">{learningStages.map(st=><button key={st.id} className={st.id===active?'current':''} onClick={()=>navigate('/chapters/'+number+'/topics/'+topic.id+'/'+st.id)} aria-pressed={st.id===active}>{st.title}</button>)}</div>
+  {isGlycolysis&&['learn','explore','practice'].includes(active)?<div className="pl-embedded-pathway"><MetabolicExplorer navigate={navigate}/></div>:
+   <div className="pl-empty-block"><span>▤</span><h2>{learningStages.find(s=>s.id===active)?.title} · Coming later</h2><p>This section is intentionally marked as planned until its educational content is prepared. Chapter 4 demonstrates the complete interactive topic template.</p><ArrowButton onClick={()=>navigate('/chapters/4')}>See the Chapter 4 example</ArrowButton></div>}
+ </div>;
+}
+
 function Practice({navigate}){
  return <><PageIntro overline="PRACTICE & ASSESSMENT" title="Build understanding through practice" description="An expandable home for chapter quizzes, reaction challenges, and data-interpretation activities."/>
-  <div className="pl-practice-tiles"><div><span>01</span><h3>Amino acid practice</h3><p>Questions within Chapter 4 on R-group properties and peptide bonds.</p><ArrowButton onClick={()=>navigate('/chapters/4')}>Open Chapter 4</ArrowButton></div><div><span>02</span><h3>Glycolysis challenge</h3><p>Five starter questions about enzymes, cleavage, ATP balance, and NADH.</p><ArrowButton onClick={()=>navigate('/tools/metabolism/glycolysis')}>Open pathway</ArrowButton></div></div>
+  <div className="pl-practice-tiles"><div><span>01</span><h3>Amino acid practice</h3><p>Questions within Chapter 4 on R-group properties and peptide bonds.</p><ArrowButton onClick={()=>navigate('/chapters/4/topics/side-chains/practice')}>Practice amino acids</ArrowButton></div><div><span>02</span><h3>Glycolysis challenge</h3><p>Five starter questions about enzymes, cleavage, ATP balance, and NADH.</p><ArrowButton onClick={()=>navigate('/tools/metabolism/glycolysis')}>Open pathway</ArrowButton></div></div>
   <div className="pl-educator-note"><span className="pl-note-symbol">✓</span><div><strong>Formal assessments are planned</strong><p>In this version, practice is ungraded and saved only in the browser. A future assessment system will require course policies and student privacy safeguards.</p></div></div>
  </>;
 }
 function Progress({navigate}){
- const chapter=getLocal('biochem-chapter4-v1'),metabolism=getLocal('biochem-metabolism-glycolysis-v1');
- const done=Array.isArray(chapter?.done)?chapter.done.length:0;
+ const chapter=getLocal('biochem-topics-v1'),metabolism=getLocal('biochem-metabolism-glycolysis-v1');
+ const done=Array.isArray(chapter?.completed)?chapter.completed.filter(s=>s.startsWith('4/')).length:0;
  const visited=Array.isArray(metabolism?.visited)?metabolism.visited.length:0;
  return <><PageIntro overline="LOCAL LEARNING PROGRESS" title="Your learning at a glance" description="This prototype saves only local browser progress. No accounts, synchronization, or instructor gradebook are connected."/>
-  <div className="pl-progress-grid"><button onClick={()=>navigate('/chapters/4')}><span className="pl-eyebrow">CHAPTER 04</span><h3>Amino Acids and Their Properties</h3><strong>{done} / 5 sections</strong><div className="pl-progress-track"><div style={{width:done/5*100+'%'}}/></div><small>Open chapter →</small></button>
+  <div className="pl-progress-grid"><button onClick={()=>navigate('/chapters/4')}><span className="pl-eyebrow">CHAPTER 04</span><h3>Amino Acids and Their Properties</h3><strong>{done} / 25 topic stages</strong><div className="pl-progress-track"><div style={{width:done/25*100+'%'}}/></div><small>Open chapter →</small></button>
   <button onClick={()=>navigate('/tools/metabolism/glycolysis')}><span className="pl-eyebrow">METABOLISM TOOL</span><h3>Glycolysis Explorer</h3><strong>{visited} / 10 steps explored</strong><div className="pl-progress-track"><div style={{width:visited/10*100+'%'}}/></div><small>Continue exploring →</small></button></div>
   <div className="pl-educator-note"><span className="pl-note-symbol">ⓘ</span><div><strong>Browser-only progress</strong><p>Using a different device or clearing browser storage will lose this progress. Student login and cross-device synchronization can be added after a privacy and access-control design review.</p></div></div>
  </>;
@@ -171,8 +235,8 @@ export default function Platform(){
  const pathname=route.split('?')[0];
  const params=new URLSearchParams(route.split('?')[1]||'');
  const numberMatch=pathname.match(/^\/chapters\/(\d+)$/);
+ const topicMatch=pathname.match(/^\/chapters\/(\d+)\/topics\/([^/]+)(?:\/([^/]+))?$/);
  const id=pathname.startsWith('/tools/metabolism/')?pathname.split('/').pop():null;
- if(numberMatch&&Number(numberMatch[1])===4)return <div className="pl-legacy-page"><div className="pl-legacy-back"><button onClick={()=>navigate('/chapters')}>← Back to textbook</button><span>Chapter 04 · Original learning module</span><button onClick={()=>navigate('/tools/metabolism')}>Explore metabolism ↗</button></div><Chapter4/></div>;
  const navPath=pathname.startsWith('/chapters')?'/chapters':pathname.startsWith('/tools')?'/tools':pathname;
  const routeLabel=pathname==='/home'?'Dashboard':pathname.startsWith('/tools/metabolism')?'Metabolic Pathway Explorer':PLATFORM_NAV.find(x=>x.path===navPath)?.label||'Course';
  return <div className="pl-shell">
@@ -180,16 +244,15 @@ export default function Platform(){
    <button className="pl-brand" onClick={()=>navigate('/home')}><span className="pl-brand-symbol">B<span>•</span></span><span><strong>Biochemistry</strong><small>INTERACTIVE LEARNING</small></span></button>
    <div className="pl-side-group">EXPLORE</div>
    <nav className="pl-side-nav" aria-label="Main navigation">{PLATFORM_NAV.map(item=><button key={item.path} onClick={()=>navigate(item.path)} aria-current={navPath===item.path?'page':undefined} className={navPath===item.path?'active':''}><span className="pl-nav-icon">{item.icon}</span>{item.label}</button>)}</nav>
-   <div className="pl-side-group section">QUICK ACCESS</div>
-   <button className="pl-quick" onClick={()=>navigate('/chapters/4')}><span>04</span> Amino acids</button>
-   <button className="pl-quick" onClick={()=>navigate('/tools/metabolism/glycolysis')}><span>↗</span> Glycolysis explorer</button>
+   <CourseTree route={pathname} navigate={navigate}/>
    <div className="pl-sidebar-footer"><div className="pl-sidebar-ring">◎</div><strong>Growing together</strong><p>One chapter and one metabolic pathway at a time.</p><span>Version 0.2 · Prototype</span></div>
   </aside>
   <main className="pl-main"><header className="pl-topbar"><span>Biochemistry / <strong>{routeLabel}</strong></span><span className="pl-top-status"><span>●</span> Learning prototype</span></header>
    <div className="pl-page-wrap">
     {pathname==='/home'&&<Home navigate={navigate}/>}
     {pathname==='/chapters'&&<Textbook navigate={navigate} filterPart={params.get('part')}/>}
-    {numberMatch&&<ChapterPreview number={Number(numberMatch[1])} navigate={navigate}/>}
+    {numberMatch&&(Number(numberMatch[1])===4?<AminoChapter navigate={navigate}/>:<ChapterPreview number={Number(numberMatch[1])} navigate={navigate}/>)}
+    {topicMatch&&(Number(topicMatch[1])===4?<AminoChapter navigate={navigate} topicId={topicMatch[2]} stageId={topicMatch[3]||'learn'}/>:<TopicPreview navigate={navigate} number={Number(topicMatch[1])} topicId={topicMatch[2]} stageId={topicMatch[3]||'learn'}/>)}
     {pathname==='/tools'&&<Tools navigate={navigate}/>}
     {pathname==='/tools/metabolism'&&<MetabolismHome navigate={navigate}/>}
     {id==='glycolysis'&&<MetabolicExplorer navigate={navigate}/>}
@@ -198,7 +261,7 @@ export default function Platform(){
     {pathname==='/practice'&&<Practice navigate={navigate}/>}
     {pathname==='/progress'&&<Progress navigate={navigate}/>}
     {pathname==='/library'&&<Library/>}
-    {!['/home','/chapters','/tools','/tools/metabolism','/practice','/progress','/library'].includes(pathname)&&!numberMatch&&!pathname.startsWith('/tools/')&&<NotFound navigate={navigate}/>}
+    {!['/home','/chapters','/tools','/tools/metabolism','/practice','/progress','/library'].includes(pathname)&&!numberMatch&&!topicMatch&&!pathname.startsWith('/tools/')&&<NotFound navigate={navigate}/>}
     <footer className="pl-footer"><span>Biochemistry Learning Platform · Built for learning and exploration</span><span>Course structure prototype · 2026</span></footer>
    </div>
   </main>
