@@ -60,8 +60,9 @@ function Bond({from,to,bond,mode}){
  * and rotatable 3D conformers generated from a chemical toolkit.
  * No external API, script, account, or network request required.
  */
-export default function MoleculeViewer({one='A',onSelectAmino,compact=false}){
- const [mode,setMode]=useState('2d'),[angles,setAngles]=useState({x:-0.35,y:0.55});
+export default function MoleculeViewer({one='A',compact=false,viewMode=null,hideViewToggle=false}){
+ const [localMode,setLocalMode]=useState('2d'),[angles,setAngles]=useState({x:-0.35,y:0.55});
+ const mode=viewMode??localMode;
  const [zoom,setZoom]=useState(1),[selected,setSelected]=useState(null);
  const dragging=useRef(null);
  const {atoms,bonds}=useMemo(()=>atomsFor(one),[one]);
@@ -83,7 +84,7 @@ export default function MoleculeViewer({one='A',onSelectAmino,compact=false}){
  }
  return <section className={'aa-molecule-card '+(compact?'compact':'')} aria-label={'Interactive '+amino.name+' molecule viewer'}>
    <div className="aa-mol-header"><div><strong>{amino.name} <span>{amino.three} · {amino.one}</span></strong><p>{amino.sidechain}</p></div>
-     <div className="aa-view-toggle" role="group" aria-label="Molecular view"><button onClick={()=>{setMode('2d');setSelected(null);}} className={mode==='2d'?'active':''} aria-pressed={mode==='2d'}>2D</button><button className={mode==='3d'?'active':''} onClick={()=>{setMode('3d');setSelected(null);}} aria-pressed={mode==='3d'}>3D</button></div></div>
+     {!hideViewToggle&&<div className="aa-view-toggle" role="group" aria-label="Molecular view"><button onClick={()=>{setLocalMode('2d');setSelected(null);}} className={mode==='2d'?'active':''} aria-pressed={mode==='2d'}>2D</button><button className={mode==='3d'?'active':''} onClick={()=>{setLocalMode('3d');setSelected(null);}} aria-pressed={mode==='3d'}>3D</button></div>}</div>
    <div className="aa-mol-canvas">
      <svg viewBox="0 0 700 380" width="100%" role="img" aria-label={mode==='3d'?'Rotatable 3D ball and stick model of '+amino.name:'2D atom and bond connectivity for '+amino.name}
        onPointerDown={start} onPointerMove={move} onPointerUp={end} onPointerCancel={end}

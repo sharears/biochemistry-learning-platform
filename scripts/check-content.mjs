@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {topicsForChapter,findTopic,learningStages} from '../src/topicCatalog.js';
-import {aminoAcids,aminoLesson,netCharge,isoelectricPoint} from '../src/amino/aminoData.js';
+import {aminoAcids,aminoLesson,netCharge,isoelectricPoint,phPresets,explainChargeAtPh} from '../src/amino/aminoData.js';
 import {moleculeGraphs} from '../src/amino/moleculeGraphs.js';
 import {parts,chapters,pathwayCatalog,metabolicCategories} from '../src/courseCatalog.js';
 import {glycolysis,sumEnergy} from '../src/metabolism/pathways.js';
@@ -84,3 +84,20 @@ assert(Math.abs(isoelectricPoint('G')-5.97)<.005);
 assert(netCharge('G',2)>0.5&&netCharge('G',12)<-.95);
 assert(netCharge('D',7)<-0.9&&netCharge('K',7)>0.9);
 console.log('Topic checks passed: all 28 chapters contain topics, 5 amino-acid lessons, 20 2D/3D structures, and charge/pI models.');
+
+/* Quick pH buttons must agree with the live charge model and have useful explanations. */
+assert.deepEqual(phPresets,[2,7,12]);
+for(const letter of Object.keys({G:1,D:1,K:1,H:1})){
+ for(const ph of phPresets){
+  const note=explainChargeAtPh(letter,ph);
+  assert(note.summary.includes('pH '+ph.toFixed(1)),'Preset explanation must show selected pH');
+  assert(note.summary.includes('α-carboxyl')&&note.summary.includes('α-amino'),'Explain both backbone groups');
+  assert(Math.abs(note.netCharge-netCharge(letter,ph))<1e-9,'Charge explanation matches model');
+  assert(note.carboxylPercent>=0&&note.carboxylPercent<=100);
+  assert(note.aminoPercent>=0&&note.aminoPercent<=100);
+ }
+}
+assert(explainChargeAtPh('G',2).netCharge>0.5);
+assert(Math.abs(explainChargeAtPh('G',7).netCharge)<0.01);
+assert(explainChargeAtPh('G',12).netCharge<-.99);
+console.log('pH preset checks passed for acidic, neutral, and basic conditions.');

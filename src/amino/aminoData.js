@@ -145,3 +145,31 @@ export function netCharge(letter,ph){
 export function isoelectricPoint(letter){
  let a=0,b=14;for(let i=0;i<80;i++){let mid=(a+b)/2;if(netCharge(letter,mid)>0)a=mid;else b=mid;}return(a+b)/2;
 }
+
+
+/** Guided checkpoints for the free-amino-acid ionization lab. */
+export const phPresets=[2,7,12];
+export function explainChargeAtPh(letter,ph){
+ const p=ionizationExamples[letter]||ionizationExamples.G;
+ const carbox=acidFraction(ph,p.carboxyl)*100;
+ const amine=baseFraction(ph,p.amino)*100;
+ const groupStatus=(value,pKa,above,below)=>{
+  if(Math.abs(value-pKa)<.15)return 'about equally '+above+' and '+below;
+  return value>pKa?'mostly '+above:'mostly '+below;
+ };
+ const carboxState=groupStatus(ph,p.carboxyl,'COO−','COOH');
+ const amineState=groupStatus(ph,p.amino,'NH₂','NH₃⁺');
+ const side=p.side?(
+  p.side.type==='acid'
+   ?'Side-chain carboxyl/thiol/phenol group: about '+Math.round(acidFraction(ph,p.side.pKa)*100)+'% deprotonated at this pH.'
+   :'Basic side chain: about '+Math.round(baseFraction(ph,p.side.pKa)*100)+'% protonated at this pH.'
+ ):'This example has no ionizable side chain in the model.';
+ const net=netCharge(letter,ph);
+ return {
+  carboxylPercent:Math.round(carbox),
+  aminoPercent:Math.round(amine),
+  netCharge:net,
+  summary:'At pH '+ph.toFixed(1)+', the α-carboxyl group is '+carboxState+', while the α-amino group is '+amineState+'. '+side+
+   ' Together these populations produce an estimated average net charge of '+(net>0?'+':'')+net.toFixed(2)+'.',
+ };
+}

@@ -1,6 +1,7 @@
 import React,{useEffect,useState} from 'react';
 import MoleculeViewer from './MoleculeViewer.jsx';
-import {aminoAcids,aminoByLetter,aaGroups,aminoLesson,modifications,netCharge,isoelectricPoint,ionizationExamples} from './aminoData.js';
+import SideBySideCompare from './SideBySideCompare.jsx';
+import {aminoAcids,aminoByLetter,aaGroups,aminoLesson,modifications,netCharge,isoelectricPoint,ionizationExamples,phPresets,explainChargeAtPh} from './aminoData.js';
 import {learningStages,topicsForChapter,findTopic} from '../topicCatalog.js';
 import './amino.css';
 
@@ -38,17 +39,20 @@ function ChargeLab(){
  const aa=aminoByLetter[chosen];
  const charge=netCharge(chosen,ph);
  const pi=isoelectricPoint(chosen);
+ const explanation=explainChargeAtPh(chosen,ph);
  return <div className="aa-lab">
   <div className="aa-lab-title"><div><span className="aa-label">INTERACTIVE ACID–BASE LAB</span><h3>Investigate charge as pH changes</h3><p>Choose a free amino acid and adjust pH. The model estimates its average net charge from ionizable-group pKa values.</p></div>
     <div className="aa-ph-number">pH <strong>{ph.toFixed(1)}</strong></div></div>
   <label className="aa-input-label" htmlFor="aa-species">Free amino acid</label>
   <select id="aa-species" value={chosen} onChange={e=>setChosen(e.target.value)}>{Object.keys(ionizationExamples).map(k=><option key={k} value={k}>{aminoByLetter[k].name}</option>)}</select>
   <label className="aa-input-label" htmlFor="aa-ph-range">Solution pH</label>
+  <div className="aa-ph-presets" role="group" aria-label="Choose a pH preset">{phPresets.map(value=><button key={value} className={ph===value?'active':''} aria-pressed={ph===value} onClick={()=>setPh(value)}>pH {value}</button>)}</div>
   <input id="aa-ph-range" type="range" min="0" max="14" step=".1" value={ph} onChange={e=>setPh(Number(e.target.value))}/>
   <div className="aa-range-scale"><span>Acidic (0)</span><span>Neutral (7)</span><span>Basic (14)</span></div>
   <div className="aa-charge-metrics"><div><small>AVERAGE NET CHARGE</small><strong>{charge>0?'+':''}{charge.toFixed(2)}</strong></div>
     <div><small>ESTIMATED pI</small><strong>{pi.toFixed(2)}</strong></div><div><small>CHARGE TENDENCY</small><strong className="aa-charge-word">{Math.abs(charge)<.1?'Near zero':charge>.1?'Positive':'Negative'}</strong></div></div>
   <div className="aa-lab-pka"><strong>Approximate pKa values</strong><span>α-COOH {model.carboxyl.toFixed(2)}</span><span>α-NH₃⁺ {model.amino.toFixed(2)}</span>{model.side&&<span>Side chain {model.side.pKa.toFixed(2)}</span>}</div>
+  <div className="aa-ph-explanation" aria-live="polite"><strong>Why does {aa.name.toLowerCase()} behave this way?</strong><p>{explanation.summary}</p><div><span>α-COO−: {explanation.carboxylPercent}%</span><span>α-NH₃⁺: {explanation.aminoPercent}%</span></div></div>
   <p className="aa-scope">Approximate independent-site model for free amino acids in water, not a prediction of charge for protein-bound residues or titration curves measured under specific conditions.</p>
  </div>;
 }
@@ -82,6 +86,7 @@ function TheInteractive({topicId,selected,onSelect}){
  if(topicId==='ionization')return <ChargeLab/>;
  if(topicId==='peptides')return <PeptideBuilder/>;
  if(topicId==='modifications')return <ModificationLab/>;
+ if(topicId==='side-chains')return <><SideBySideCompare/><details className="aa-single-explorer"><summary>Browse one amino acid individually</summary><ProfilePicker selected={selected} onSelect={onSelect}/><MoleculeViewer one={selected}/></details></>;
  return <><ProfilePicker selected={selected} onSelect={onSelect}/><MoleculeViewer one={selected}/></>;
 }
 function QuestionSet({questions,answers,onAnswer,prefix}){

@@ -97,3 +97,11 @@ This revision implements **Part → Chapter → Topic** in the left sidebar and 
 \`src/amino/aminoData.js\`, \`src/amino/moleculeGraphs.js\`, \`src/amino/amino.css\`, and \`src/topicCatalog.js\`.
 
 This is still a teaching prototype. Its 3D conformers show an example geometry, not the distribution of molecular conformations in solution. Its simple acid-base calculations are for free amino acids, not peptide residues or experimental titration curves.
+
+
+## v0.4 — Two interactive improvements (November 2026)
+
+- **Topic 4.2 — Compare two amino acids:** students can select any two of the 20 standard amino acids, swap them, and switch both molecule canvases between 2D and rotatable 3D. A comparison table shows side-chain chemistry, polarity, common charge near pH 7, and characteristic properties. The original individual amino-acid browser remains inside an optional expandable section.
+- **Topic 4.3 — pH presets:** one-click pH 2, 7, and 12 buttons work alongside the existing slider. The explanatory panel updates with each amino acid and pH, describing α-carboxyl/α-amino protonation and (where modeled) side-chain behavior, with fractions and computed average net charge.
+
+The presets are shortcuts to the existing free-amino-acid equilibrium model, not experimentally measured curves. The charge labels in the comparison table are approximations for **side chains near pH 7**, not whole molecular charge.

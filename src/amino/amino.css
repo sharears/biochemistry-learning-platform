@@ -126,3 +126,41 @@
 @media(max-width:1100px){.aa-letter-grid{grid-template-columns:repeat(7,minmax(0,1fr))}}
 @media(max-width:740px){.aa-chapter-hero,.aa-topic-hero{padding:25px}.aa-letter-grid{grid-template-columns:repeat(10,minmax(0,1fr))}}
 @media(max-width:560px){.aa-topic-cards{grid-template-columns:1fr}.aa-topic-cards button:last-child:nth-child(odd){grid-column:auto}.aa-letter-grid{grid-template-columns:repeat(5,minmax(0,1fr))}.aa-stage-tabs{gap:3px}.aa-stage-tabs button{font-size:10px;padding:11px 2px}.aa-stage-tabs button span{display:block;margin:0 0 5px}.aa-picker-top,.aa-profile,.aa-lab-title{display:block}.aa-picker-top label{display:block;margin-top:12px}.aa-profile>div:last-child{margin-top:18px}.aa-answer-grid{grid-template-columns:1fr}.aa-charge-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.aa-mol-header{align-items:flex-start}.aa-mol-header strong{font-size:14px}.aa-view-toggle button{padding:7px 10px}.aa-completion{align-items:stretch;flex-direction:column}.aa-chain{gap:4px}.aa-peptide-link{flex-basis:35px}}
+
+
+/* Topic 4.2 — side-by-side comparison (reuses the existing molecule viewer). */
+.aa-compare{border:1px solid #dcebe1;border-radius:14px;background:#fff;padding:23px;margin-bottom:16px}
+.aa-compare-header{display:flex;align-items:start;justify-content:space-between;gap:16px;margin-bottom:18px}
+.aa-compare-header h3{font-size:21px;color:#315d49;margin:8px 0}
+.aa-compare-header p{font-size:12px;color:#759181;line-height:1.8}
+.aa-compare-pickers{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:13px;align-items:end;margin:0 0 17px}
+.aa-compare-select{display:block;min-width:0;font-size:11px;font-weight:750;color:#4e8065}
+.aa-compare-select select{display:block;margin-top:7px;border:1px solid #cbded2;border-radius:8px;padding:10px 9px;background:#fff;color:#366c50;width:100%;max-width:100%;font-size:12px;min-height:39px}
+.aa-compare-swap{border:1px solid #b8dcc4;border-radius:8px;background:#eaf6ed;color:#267c5b;padding:10px 12px;font-size:11px;font-weight:800;white-space:nowrap;min-height:39px}
+.aa-compare-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;align-items:start}
+.aa-compare-grid .aa-molecule-card{min-width:0;margin:0;padding:12px}
+.aa-compare-grid .aa-mol-canvas svg{max-height:260px}
+.aa-compare-grid .aa-mol-header{min-height:52px}
+.aa-compare-grid .aa-mol-watermark{font-size:9px}
+.aa-comparison-table-wrap{overflow-x:auto;margin-top:15px}
+.aa-comparison-table{min-width:570px;width:100%;border-collapse:collapse;font-size:12px}
+.aa-comparison-table th,.aa-comparison-table td{border-bottom:1px solid #e9f0eb;padding:12px 13px;text-align:left;color:#5c806b;vertical-align:top;line-height:1.6}
+.aa-comparison-table thead th{background:#ebf5ef;color:#316d4d;font-weight:800}
+.aa-comparison-table tbody th{font-size:11px;color:#4b785c;min-width:145px;background:#f7fbf8}
+.aa-single-explorer{background:#f8fbf9;border:1px dashed #c7e1d1;border-radius:12px;padding:14px 18px;margin:14px 0}
+.aa-single-explorer summary{cursor:pointer;font-size:12px;font-weight:750;color:#337b58;padding:3px 0}
+.aa-single-explorer[open] summary{margin-bottom:16px}
+.aa-single-explorer .aa-picker,.aa-single-explorer .aa-molecule-card{margin-bottom:14px}
+
+/* Topic 4.3 — one-click pH checkpoints with contextual chemistry. */
+.aa-ph-presets{display:flex;gap:9px;flex-wrap:wrap;margin:8px 0 13px}
+.aa-ph-presets button{border:1px solid #b9d9c5;background:#f2f9f4;color:#317d5e;border-radius:8px;padding:10px 16px;font-weight:800;font-size:12px}
+.aa-ph-presets button.active{border-color:#2e9368;background:#1e8164;color:#fff}
+.aa-ph-presets button:hover{border-color:#3b9f73}
+.aa-ph-explanation{margin-top:21px;background:#eff8f3;border-left:3px solid #4caa7e;border-radius:9px;padding:17px}
+.aa-ph-explanation strong{font-size:13px;color:#236f4f}
+.aa-ph-explanation p{font-size:12px;color:#567c66;line-height:1.8;margin:8px 0 12px}
+.aa-ph-explanation>div{display:flex;gap:8px;flex-wrap:wrap}
+.aa-ph-explanation>div span{font-size:10px;background:#fff;border:1px solid #d6e9dc;border-radius:20px;padding:6px 11px;color:#447857;font-weight:700}
+@media(max-width:880px){.aa-compare-grid{grid-template-columns:1fr}.aa-compare-grid .aa-mol-canvas svg{max-height:300px}.aa-compare-grid .aa-mol-header{min-height:0}}
+@media(max-width:560px){.aa-compare{padding:15px}.aa-compare-header{display:block}.aa-compare-header .aa-view-toggle{display:inline-flex;margin-top:13px}.aa-compare-pickers{grid-template-columns:1fr 1fr;gap:9px}.aa-compare-swap{grid-column:1/-1;grid-row:2;justify-self:center}.aa-ph-presets button{flex:1;padding:10px}}
