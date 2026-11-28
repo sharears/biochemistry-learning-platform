@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {topicsForChapter,findTopic,learningStages} from '../src/topicCatalog.js';
-import {aminoAcids,aminoLesson,netCharge,isoelectricPoint,phPresets,explainChargeAtPh} from '../src/amino/aminoData.js';
+import {aminoAcids,aminoLesson,netCharge,isoelectricPoint,phPresets,explainChargeAtPh,ionizationExamples} from '../src/amino/aminoData.js';
+import {chargeBreakdown,protonationAtomLabels,TITRATABLE_ATOM_INDICES,displayCharge} from '../src/amino/protonation.js';
 import {moleculeGraphs} from '../src/amino/moleculeGraphs.js';
 import {parts,chapters,pathwayCatalog,metabolicCategories} from '../src/courseCatalog.js';
 import {glycolysis,sumEnergy} from '../src/metabolism/pathways.js';
@@ -101,3 +102,42 @@ assert(explainChargeAtPh('G',2).netCharge>0.5);
 assert(Math.abs(explainChargeAtPh('G',7).netCharge)<0.01);
 assert(explainChargeAtPh('G',12).netCharge<-.99);
 console.log('pH preset checks passed for acidic, neutral, and basic conditions.');
+
+
+/* Interactive calculation and molecular protonation: one consistent model. */
+assert.equal(Object.keys(TITRATABLE_ATOM_INDICES).length,Object.keys(ionizationExamples).length);
+for(const [one,model] of Object.entries(ionizationExamples)){
+ const mapping=TITRATABLE_ATOM_INDICES[one];
+ assert(mapping,'Missing pH-sensitive structure mapping for '+one);
+ assert(Object.keys(mapping).length===2+(model.side?1:0),'Incorrect group count for '+one);
+ const [atoms,bonds]=moleculeGraphs[one];
+ for(const [id,index] of Object.entries(mapping)){
+  assert(Number.isInteger(index)&&index>=0&&index<atoms.length,'Invalid atom index '+one+' '+id);
+  const symbol=atoms[index][0];
+  assert(symbol===(id==='amino'?'N':id==='carboxyl'?'O':({C:'S',Y:'O',D:'O',E:'O',K:'N',R:'N',H:'N'}[one])),'Wrong titratable atom '+one+' '+id);
+ }
+ for(const ph of [0,0.6,2,2.34,3.65,6,7,9.6,12,14]){
+  const b=chargeBreakdown(one,ph);
+  const labels=protonationAtomLabels(one,ph);
+  assert.equal(b.groups.length,Object.keys(mapping).length);
+  assert(Math.abs(b.meanCharge-b.modelCharge)<1e-10,'Breakdown disagrees with live charge');
+  assert(Object.keys(labels).length===b.groups.length,'All ionizable groups visible');
+  assert(b.groups.every(g=>Math.abs(g.protonatedFraction+g.deprotonatedFraction-1)<1e-10),'HH fractions must sum to one');
+  assert(b.groups.every(g=>g.predominantlyProtonated===(ph<=g.pKa)),'Majority switch at pKa');
+  assert(b.groups.every(g=>g.type==='base'?g.contribution>=0:g.contribution<=0),'Expected charge sign');
+ }
+}
+assert.equal(protonationAtomLabels('G',0.6)[0].text,'NH₃⁺');
+assert.equal(protonationAtomLabels('G',0.6)[4].text,'OH');
+assert.equal(chargeBreakdown('G',0.6).dominantCharge,1);
+assert(Math.abs(chargeBreakdown('G',0.6).meanCharge-.9821)<.001);
+assert.equal(protonationAtomLabels('G',7)[4].text,'O⁻');
+assert.equal(protonationAtomLabels('G',12)[0].text,'NH₂');
+assert.equal(chargeBreakdown('G',7).dominantCharge,0);
+assert.equal(protonationAtomLabels('D',7)[0].text,'O⁻');
+assert.equal(protonationAtomLabels('K',2)[0].text,'NH₃⁺');
+assert.equal(protonationAtomLabels('K',12)[0].text,'NH₂');
+assert.equal(protonationAtomLabels('H',2)[1].text,'NH⁺');
+assert(chargeBreakdown('G',2.34).nearTransition,'pKa midpoint requires population note');
+assert.equal(displayCharge(0,2),'0.00');
+console.log('Ionization structure checks passed: nine amino acids, 2D/3D atom mappings, pH-dependent species, and group-level math.');

@@ -105,3 +105,15 @@ This is still a teaching prototype. Its 3D conformers show an example geometry, 
 - **Topic 4.3 — pH presets:** one-click pH 2, 7, and 12 buttons work alongside the existing slider. The explanatory panel updates with each amino acid and pH, describing α-carboxyl/α-amino protonation and (where modeled) side-chain behavior, with fractions and computed average net charge.
 
 The presets are shortcuts to the existing free-amino-acid equilibrium model, not experimentally measured curves. The charge labels in the comparison table are approximations for **side chains near pH 7**, not whole molecular charge.
+
+
+## v0.5 — Explain charge and visualize pH-dependent structure (November 2026)
+
+Topic 4.3 now teaches charge and structure in the **same existing interactive pH lab**:
+
+1. Directly under the pH slider, a **2D / rotatable 3D amino acid viewer** uses the existing molecular graphs and highlights each ionizable atom using its predominant protonation state (e.g., NH₃⁺ ↔ NH₂, OH ↔ O⁻). This supports glycine, alanine, aspartate, glutamate, lysine, arginine, histidine, cysteine, and tyrosine—the nine free amino acids already supported by the lab. The group table shows both protonated and deprotonated percentages, and warns when populations are mixed near pKa.
+2. Below the Average Net Charge result, the expandable **“How is this calculated?”** panel shows Henderson–Hasselbalch equations, numeric substitution at the current pH, charge contribution from each group, a final sum, and how estimated pI is obtained. All values follow the slider and amino-acid selection without page reload.
+
+Important: the molecular viewer shows one representative **predominant microstate**, which has an integer formal charge, while the reported average net charge is **fractional**, weighted over an ensemble. Acidic/basic site pKa values are approximate and assumed independent. The 3D coordinates are illustrative conformers and are *not* reoptimized when protonation changes. Arg and His ring annotations depict one possible formal resonance/tautomer representation.
+
+Code: \`src/amino/protonation.js\`, \`src/amino/IonizationStructure.jsx\`, and \`src/amino/ChargeCalculation.jsx\`. Additional calculations and atom mapping tests are in \`scripts/check-content.mjs\`.

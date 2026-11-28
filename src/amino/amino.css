@@ -164,3 +164,63 @@
 .aa-ph-explanation>div span{font-size:10px;background:#fff;border:1px solid #d6e9dc;border-radius:20px;padding:6px 11px;color:#447857;font-weight:700}
 @media(max-width:880px){.aa-compare-grid{grid-template-columns:1fr}.aa-compare-grid .aa-mol-canvas svg{max-height:300px}.aa-compare-grid .aa-mol-header{min-height:0}}
 @media(max-width:560px){.aa-compare{padding:15px}.aa-compare-header{display:block}.aa-compare-header .aa-view-toggle{display:inline-flex;margin-top:13px}.aa-compare-pickers{grid-template-columns:1fr 1fr;gap:9px}.aa-compare-swap{grid-column:1/-1;grid-row:2;justify-self:center}.aa-ph-presets button{flex:1;padding:10px}}
+
+
+/* Topic 4.3: pH-responsive molecular structure, embedded next to slider. */
+.aa-ionization-structure{margin:19px 0 18px;padding:19px;border:1px solid #d6e8de;border-radius:12px;background:#fbfefa}
+.aa-structure-head{display:flex;align-items:start;justify-content:space-between;gap:12px;margin-bottom:13px}
+.aa-structure-head h3{margin:8px 0;font-size:18px;color:#2b684c}
+.aa-structure-head p{font-size:11px;color:#729080;line-height:1.7}
+.aa-structure-status{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:11px}
+.aa-structure-status>div{display:flex;flex-direction:column;gap:5px;padding:12px 14px;background:#eaf6ee;border:1px solid #d3e9d9;border-radius:9px;flex:1;min-width:160px}
+.aa-structure-status span{font-size:10px;color:#6f937d}
+.aa-structure-status strong{color:#237c56;font-size:15px}
+.aa-ionization-structure .aa-molecule-card{padding:12px;margin:0;background:#fff}
+.aa-ionization-structure .aa-mol-canvas svg{max-height:340px}
+.aa-ionization-structure .aa-mol-header p{font-size:11px;margin-top:3px}
+.aa-group-state-list{display:grid;gap:7px;margin-top:14px}
+.aa-group-state{display:flex;justify-content:space-between;gap:13px;align-items:center;padding:12px 14px;border-radius:9px;background:#f1f8f3;border:1px solid #e1ece5}
+.aa-group-state>div:first-child{display:grid;gap:5px;min-width:145px}
+.aa-group-state strong{font-size:11px;color:#3f7054}
+.aa-group-state span{font-size:10px;color:#71917b}
+.aa-group-state b{color:#227e55}
+.aa-state-fractions{display:flex;flex-wrap:wrap;gap:7px;justify-content:flex-end}
+.aa-state-fractions span{white-space:nowrap;background:#fff;border:1px solid #d9e7df;border-radius:20px;padding:6px 9px;color:#477c5d;font-weight:700}
+.aa-population-note{border-left:3px solid #d4a45d;background:#fff8e9;border-radius:8px;color:#83633d;font-size:11px!important;line-height:1.75!important;padding:12px 15px;margin-top:13px!important}
+.aa-population-note strong{font-weight:800}
+.aa-ionization-structure .aa-scope{margin-bottom:0}
+
+/* Expandable quantitative explanation (Task 1). */
+.aa-calculation{border:1px solid #bbdcc9;border-radius:11px;background:#f4faf6;margin:0 0 20px;overflow:hidden}
+.aa-calculation summary{cursor:pointer;padding:15px 17px;display:flex;gap:10px;justify-content:space-between;align-items:center;color:#237557;font-size:13px;font-weight:800;list-style:revert}
+.aa-calculation summary:hover{background:#ecf6ef}
+.aa-calculation[open] summary{border-bottom:1px solid #d7e8da}
+.aa-calc-expander{font-size:10px;color:#7b9b86;font-weight:500}
+.aa-calc-body{padding:18px 20px 22px}
+.aa-calc-body>p{font-size:12px;color:#648370;line-height:1.8;margin:0 0 12px}
+.aa-calc-body h4{margin:19px 0 9px;color:#2c674b;font-size:14px}
+.aa-calc-equations{display:grid;gap:8px;grid-template-columns:repeat(2,minmax(0,1fr))}
+.aa-calc-equations>div{border-radius:8px;background:#fff;border:1px solid #dce9de;padding:12px;display:grid;gap:8px;min-width:0}
+.aa-calc-equations strong{font-size:11px;color:#3c7857}
+.aa-calc-equations code,.aa-formula code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;color:#346c57;overflow-wrap:anywhere;white-space:normal}
+.aa-calculation-sites{display:grid;gap:10px}
+.aa-calculation-site{padding:14px 16px;border-radius:10px;background:#fff;border:1px solid #dbe9de}
+.aa-site-header{display:flex;justify-content:space-between;gap:10px;font-size:12px}
+.aa-site-header strong{color:#296b4e}.aa-site-header span{color:#7c9a84;font-size:11px}
+.aa-calculation-site p{color:#70917c;font-size:11px;margin-top:7px}
+.aa-formula{display:flex;flex-wrap:wrap;align-items:center;gap:7px;background:#f3faf5;border-radius:7px;margin-top:10px;padding:11px}
+.aa-formula-name{color:#5c806b;font-size:11px}
+.aa-formula strong{color:#26805c;font-size:12px}
+.aa-calc-contribution{display:flex;justify-content:space-between;gap:10px;padding:12px 0 0;color:#638773;font-size:11px}
+.aa-calc-contribution strong{color:#1e7b52;font-size:16px}
+.aa-calc-total{background:#e2f4e8;border-radius:9px;padding:15px;display:grid;gap:7px;color:#437d59;font-size:12px;overflow-wrap:anywhere}
+.aa-calc-total strong{font-size:18px;color:#1f744b}
+@media(max-width:700px){
+ .aa-structure-head{display:block}
+ .aa-structure-head .aa-view-toggle{display:inline-flex;margin-top:12px}
+ .aa-group-state{align-items:flex-start;flex-direction:column}
+ .aa-state-fractions{justify-content:flex-start}
+ .aa-calc-equations{grid-template-columns:1fr}
+ .aa-calc-expander{display:none}
+ .aa-calc-body{padding:14px}
+}

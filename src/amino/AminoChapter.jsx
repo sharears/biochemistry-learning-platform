@@ -1,6 +1,8 @@
 import React,{useEffect,useState} from 'react';
 import MoleculeViewer from './MoleculeViewer.jsx';
 import SideBySideCompare from './SideBySideCompare.jsx';
+import IonizationStructure from './IonizationStructure.jsx';
+import ChargeCalculation from './ChargeCalculation.jsx';
 import {aminoAcids,aminoByLetter,aaGroups,aminoLesson,modifications,netCharge,isoelectricPoint,ionizationExamples,phPresets,explainChargeAtPh} from './aminoData.js';
 import {learningStages,topicsForChapter,findTopic} from '../topicCatalog.js';
 import './amino.css';
@@ -49,8 +51,10 @@ function ChargeLab(){
   <div className="aa-ph-presets" role="group" aria-label="Choose a pH preset">{phPresets.map(value=><button key={value} className={ph===value?'active':''} aria-pressed={ph===value} onClick={()=>setPh(value)}>pH {value}</button>)}</div>
   <input id="aa-ph-range" type="range" min="0" max="14" step=".1" value={ph} onChange={e=>setPh(Number(e.target.value))}/>
   <div className="aa-range-scale"><span>Acidic (0)</span><span>Neutral (7)</span><span>Basic (14)</span></div>
+  <IonizationStructure one={chosen} ph={ph}/>
   <div className="aa-charge-metrics"><div><small>AVERAGE NET CHARGE</small><strong>{charge>0?'+':''}{charge.toFixed(2)}</strong></div>
     <div><small>ESTIMATED pI</small><strong>{pi.toFixed(2)}</strong></div><div><small>CHARGE TENDENCY</small><strong className="aa-charge-word">{Math.abs(charge)<.1?'Near zero':charge>.1?'Positive':'Negative'}</strong></div></div>
+  <ChargeCalculation one={chosen} ph={ph}/>
   <div className="aa-lab-pka"><strong>Approximate pKa values</strong><span>α-COOH {model.carboxyl.toFixed(2)}</span><span>α-NH₃⁺ {model.amino.toFixed(2)}</span>{model.side&&<span>Side chain {model.side.pKa.toFixed(2)}</span>}</div>
   <div className="aa-ph-explanation" aria-live="polite"><strong>Why does {aa.name.toLowerCase()} behave this way?</strong><p>{explanation.summary}</p><div><span>α-COO−: {explanation.carboxylPercent}%</span><span>α-NH₃⁺: {explanation.aminoPercent}%</span></div></div>
   <p className="aa-scope">Approximate independent-site model for free amino acids in water, not a prediction of charge for protein-bound residues or titration curves measured under specific conditions.</p>

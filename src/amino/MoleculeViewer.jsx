@@ -30,17 +30,25 @@ function diagram3d(atoms,ax,ay,zoom){
  const scale=Math.min(7,150/span)*zoom;
  return original.map(p=>({...p,x:350+p.x*scale,y:190-p.y*scale}));
 }
-function Atom({p,i,mode,selected,onPick}){
+function Atom({p,i,mode,selected,onPick,protonationLabel=null}){
  const [symbol,charge]=p.atom,rad=mode==='3d'?(symbol==='C'?12:14):symbol==='C'?9:12;
+ const emphasized=Boolean(protonationLabel);
+ const badgeWidth=emphasized?Math.max(43,protonationLabel.text.length*11+14):0;
  return <g onClick={()=>onPick(i)} role="button" tabIndex="0"
-  aria-label={'Inspect atom '+(i+1)+': '+symbol+(charge?' charged '+charge:'')}
+  aria-label={'Inspect atom '+(i+1)+': '+(protonationLabel?.group||symbol)+(protonationLabel?' '+protonationLabel.text:(charge?' charged '+charge:''))}
   onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();onPick(i);}}}
   className="aa-atom" style={{cursor:'pointer'}}>
-  <circle cx={p.x} cy={p.y} r={rad+(selected===i?5:2)} fill={selected===i?'#d3edcf':'transparent'} stroke={selected===i?'#2d946d':'none'} strokeWidth="2"/>
-  <circle cx={p.x} cy={p.y} r={rad} fill={getColor(symbol)} stroke="#fff" strokeWidth="1.7"/>
-  {mode==='3d'&&<circle cx={p.x-3} cy={p.y-4} r="3.2" fill="#fff" fillOpacity=".40"/>}
-  <text x={p.x} y={p.y+4} textAnchor="middle" fontSize={symbol==='C'?10:11} fontWeight="800" fill="#fff">{symbol}</text>
-  {charge!==0&&<text x={p.x+rad-1} y={p.y-rad+2} fontSize="12" fill="#2e5960" fontWeight="900">{chargeSign(charge)}</text>}
+  {emphasized?<g>
+   <rect x={p.x-badgeWidth/2} y={p.y-14} width={badgeWidth} height="28" rx="9"
+     fill="#e0f4e9" stroke={selected===i?"#168360":"#63b08c"} strokeWidth={selected===i?3:2}/>
+   <text x={p.x} y={p.y+5} textAnchor="middle" fontSize="15" fontWeight="800" fill="#17684d">{protonationLabel.text}</text>
+  </g>:<g>
+   <circle cx={p.x} cy={p.y} r={rad+(selected===i?5:2)} fill={selected===i?'#d3edcf':'transparent'} stroke={selected===i?'#2d946d':'none'} strokeWidth="2"/>
+   <circle cx={p.x} cy={p.y} r={rad} fill={getColor(symbol)} stroke="#fff" strokeWidth="1.7"/>
+   {mode==='3d'&&<circle cx={p.x-3} cy={p.y-4} r="3.2" fill="#fff" fillOpacity=".40"/>}
+   <text x={p.x} y={p.y+4} textAnchor="middle" fontSize={symbol==='C'?10:11} fontWeight="800" fill="#fff">{symbol}</text>
+   {charge!==0&&<text x={p.x+rad-1} y={p.y-rad+2} fontSize="12" fill="#2e5960" fontWeight="900">{chargeSign(charge)}</text>}
+  </g>}
  </g>;
 }
 function Bond({from,to,bond,mode}){
@@ -60,7 +68,7 @@ function Bond({from,to,bond,mode}){
  * and rotatable 3D conformers generated from a chemical toolkit.
  * No external API, script, account, or network request required.
  */
-export default function MoleculeViewer({one='A',compact=false,viewMode=null,hideViewToggle=false}){
+export default function MoleculeViewer({one='A',compact=false,viewMode=null,hideViewToggle=false,protonationLabels=null}){
  const [localMode,setLocalMode]=useState('2d'),[angles,setAngles]=useState({x:-0.35,y:0.55});
  const mode=viewMode??localMode;
  const [zoom,setZoom]=useState(1),[selected,setSelected]=useState(null);
@@ -92,7 +100,7 @@ export default function MoleculeViewer({one='A',compact=false,viewMode=null,hide
        tabIndex={mode==='3d'?0:undefined} style={{touchAction:mode==='3d'?'none':'auto'}}>
        <rect width="700" height="380" rx="16" fill="#f8fbf9"/>
        <g>{bonds.map((bond,i)=><Bond key={i} from={coords[bond[0]]} to={coords[bond[1]]} bond={bond} mode={mode}/>)}</g>
-       <g>{ordered.map(i=><Atom key={i} i={i} p={coords[i]} mode={mode} selected={selected} onPick={setSelected}/>)}</g>
+       <g>{ordered.map(i=><Atom key={i} i={i} p={coords[i]} mode={mode} selected={selected} onPick={setSelected} protonationLabel={protonationLabels?.[i]}/>)}</g>
      </svg>
      <span className="aa-mol-watermark">{mode==='3d'?'Computational conformer · drag to rotate':'Atom and bond connectivity · tap atoms'}</span>
    </div>
@@ -100,7 +108,7 @@ export default function MoleculeViewer({one='A',compact=false,viewMode=null,hide
      <div className="aa-element-legend"><span><i style={{background:getColor('C')}}/>C</span><span><i style={{background:getColor('N')}}/>N</span><span><i style={{background:getColor('O')}}/>O</span><span><i style={{background:getColor('S')}}/>S</span></div>
      {mode==='3d'&&<div className="aa-rotation-buttons"><button onClick={()=>setZoom(z=>clamp(z-.12,.6,1.7))} aria-label="Zoom molecule out">−</button><button onClick={()=>setZoom(z=>clamp(z+.12,.6,1.7))} aria-label="Zoom molecule in">+</button><button onClick={()=>{setAngles({x:-.35,y:.55});setZoom(1);}} title="Reset 3D view">↺</button></div>}
    </div>
-   {selected!==null&&<p className="aa-atom-detail" aria-live="polite">Atom {selected+1}: <strong>{atoms[selected][0]}</strong>{atoms[selected][1]!==0?' · formal charge '+(atoms[selected][1]>0?'+':'')+atoms[selected][1]:''} · bonded to {bonds.filter(b=>b[0]===selected||b[1]===selected).length} heavy atom(s). Hydrogen atoms are implicit.</p>}
-   <p className="aa-mol-disclaimer">Free amino acid, illustrated near neutral pH. Hydrogen atoms are implicit; 3D geometry is computational and schematic, not experimental. Titrating groups and peptide-bound residues can have different protonation.</p>
+   {selected!==null&&<p className="aa-atom-detail" aria-live="polite">Atom {selected+1}: <strong>{protonationLabels?.[selected]?.text||atoms[selected][0]}</strong>{protonationLabels?.[selected]?' · '+protonationLabels[selected].group:(atoms[selected][1]!==0?' · formal charge '+(atoms[selected][1]>0?'+':'')+atoms[selected][1]:'')} · bonded to {bonds.filter(b=>b[0]===selected||b[1]===selected).length} heavy atom(s). {protonationLabels?'Hydrogens on highlighted ionizable groups are shown in their labels; other hydrogens are implicit.':'Hydrogen atoms are implicit.'}</p>}
+   <p className="aa-mol-disclaimer">{protonationLabels?'Predominant protonation states at the selected pH are shown as labels at the actual titratable atoms. Other hydrogens remain implicit. 3D coordinates do not re-optimize with pH; this is a structural teaching model.':'Free amino acid, illustrated near neutral pH. Hydrogen atoms are implicit; 3D geometry is computational and schematic, not experimental. Titrating groups and peptide-bound residues can have different protonation.'}</p>
  </section>;
 }
