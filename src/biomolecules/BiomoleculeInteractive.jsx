@@ -2,11 +2,10 @@ import React,{useState} from 'react';
 import './biomolecules.css';
 
 const sugarProfiles={
- glucose:{name:'D-glucose',positions:['R','L','R','R'],epimer:'Reference configuration: C2 right, C3 left, C4 right, C5 right'},
- mannose:{name:'D-mannose',positions:['L','L','R','R'],epimer:'C2 epimer of D-glucose: the C2 OH is flipped'},
- galactose:{name:'D-galactose',positions:['R','L','L','R'],epimer:'C4 epimer of D-glucose: the C4 OH is flipped'}
+ glucose:{name:'D-glucose',ring:'D-glucopyranose',positions:['R','L','R','R'],epimer:'Reference configuration: C2 right, C3 left, C4 right, C5 right'},
+ mannose:{name:'D-mannose',ring:'D-mannopyranose',positions:['L','L','R','R'],epimer:'C2 epimer of D-glucose: the C2 OH is flipped'},
+ galactose:{name:'D-galactose',ring:'D-galactopyranose',positions:['R','L','L','R'],epimer:'C4 epimer of D-glucose: the C4 OH is flipped'}
 };
-const pos=(way)=>way==='R'?'right':'left';
 function Fischer({profile}){
  const rows=profile.positions;
  return <svg viewBox="0 0 300 335" className="bm-sugar-svg" role="img" aria-label={'Open-chain Fischer projection of '+profile.name}>
@@ -36,7 +35,7 @@ function Haworth({profile,anomer}){
   {n:4,x:145,y:110,dir:positions[2]==='R'?'down':'up',label:'OH'},
   {n:5,x:185,y:56,dir:'up',label:'CH₂OH'}
  ];
- return <svg viewBox="0 0 440 285" className="bm-sugar-svg" role="img" aria-label={anomer+'-'+profile.name+' pyranose Haworth projection with OH orientations'}>
+ return <svg viewBox="0 0 440 285" className="bm-sugar-svg" role="img" aria-label={anomer+'-'+profile.ring+' Haworth projection with OH orientations'}>
    <path d="M257 57 L310 108 L283 172 L195 172 L145 110 L185 56 Z" fill="#ecf8f0" stroke="#397e64" strokeWidth="4" strokeLinejoin="round"/>
    <text x="254" y="64" fontSize="22" fontWeight="800" fill="#d25b61">O</text>
    {carbons.map(c=>{
@@ -64,7 +63,7 @@ function SugarStereochemistry(){
    <label>C1 anomer<select value={anomer} onChange={e=>setAnomer(e.target.value)}><option value="alpha">α (down OH)</option><option value="beta">β (up OH)</option></select></label></div>
   </div>
   <div className="bm-figure-grid"><div className="bm-figure"><strong>Open chain · Fischer projection</strong><Fischer profile={chosen}/></div>
-    <div className="bm-figure"><strong>{anomer==='alpha'?'α':'β'}-{chosen.name.slice(2)}pyranose · Haworth schematic</strong><Haworth profile={chosen} anomer={anomer}/></div></div>
+    <div className="bm-figure"><strong>{anomer==='alpha'?'α':'β'}-{chosen.ring} · Haworth schematic</strong><Haworth profile={chosen} anomer={anomer}/></div></div>
   <div className="bm-insight"><strong>What changed?</strong><p>{chosen.epimer}. The {anomer==='alpha'?'alpha':'beta'} anomer has its C1 OH {anomer==='alpha'?'down (trans to C5 CH₂OH)':'up (cis to C5 CH₂OH)'}. D/L remains D in both cases.</p></div>
   <p className="bm-disclaimer">Teaching diagrams of D-aldohexose pyranoses, not measured conformers or equilibrium populations. The Fischer form and Haworth form are related by cyclization; OH orientation is schematic, with several hydrogen atoms omitted.</p>
  </div>;
