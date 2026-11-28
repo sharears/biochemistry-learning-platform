@@ -72,7 +72,64 @@
 .aa-ph-number{background:#e6f4e9;border-radius:10px;padding:11px 17px;color:#377959;font-size:11px;white-space:nowrap}
 .aa-ph-number strong{display:block;font-size:27px}
 .aa-input-label{display:block;color:#527c65;font-size:11px;font-weight:750;margin:17px 0 7px}
-.aa-lab input[type=range]{width:100%;margin-top:13px;accent-color:#278867}
+/* Universal pH indicator colors (approximate; individual indicator papers vary).
+   Stops are positioned across the full pH 0-14 range, with pH 7 at the green midpoint. */
+.aa-lab #aa-ph-range{
+  -webkit-appearance:none;
+  appearance:none;
+  display:block;
+  width:100%;
+  height:12px;
+  margin:17px 0 10px;
+  border:0;
+  border-radius:999px;
+  background:linear-gradient(to right,
+    #d83a3a 0%,
+    #e64a35 14.286%,
+    #ef8332 28.571%,
+    #f4c341 35.714%,
+    #e3d943 42.857%,
+    #39a94d 50%,
+    #28a698 57.143%,
+    #247bb5 71.429%,
+    #4054b4 78.571%,
+    #6948ab 85.714%,
+    #903da7 100%);
+  cursor:pointer;
+}
+.aa-lab #aa-ph-range::-webkit-slider-runnable-track{
+  height:12px;
+  background:transparent;
+  border-radius:999px;
+}
+.aa-lab #aa-ph-range::-moz-range-track{
+  height:12px;
+  background:transparent;
+  border-radius:999px;
+}
+.aa-lab #aa-ph-range::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  appearance:none;
+  width:21px;
+  height:21px;
+  margin-top:-4.5px;
+  border:3px solid #fff;
+  border-radius:50%;
+  background:#263b38;
+  box-shadow:0 0 0 1px #425a53,0 2px 5px #0004;
+}
+.aa-lab #aa-ph-range::-moz-range-thumb{
+  width:15px;
+  height:15px;
+  border:3px solid #fff;
+  border-radius:50%;
+  background:#263b38;
+  box-shadow:0 0 0 1px #425a53,0 2px 5px #0004;
+}
+.aa-lab #aa-ph-range:focus-visible{
+  outline:2px solid #205f78;
+  outline-offset:4px;
+}
 .aa-range-scale{display:flex;justify-content:space-between;color:#93a89a;font-size:10px}
 .aa-charge-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:21px 0}
 .aa-charge-metrics>div{background:#f0f7f2;border:1px solid #e3eee4;border-radius:9px;padding:15px 10px;min-width:0}
