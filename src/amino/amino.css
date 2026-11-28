@@ -69,7 +69,7 @@
 .aa-lab h3{margin-top:8px}
 .aa-lab>p,.aa-lab-title p{font-size:12px;color:#749081;margin:8px 0 18px}
 .aa-lab-title{display:flex;justify-content:space-between;align-items:start;gap:12px}
-.aa-ph-number{background:#e6f4e9;border-radius:10px;padding:11px 17px;color:#377959;font-size:11px;white-space:nowrap}
+.aa-ph-number{background:#39a94d;border-radius:10px;padding:11px 17px;color:#18332d;font-size:11px;white-space:nowrap;transition:background-color .15s ease,color .15s ease}
 .aa-ph-number strong{display:block;font-size:27px}
 .aa-input-label{display:block;color:#527c65;font-size:11px;font-weight:750;margin:17px 0 7px}
 /* Universal pH indicator colors (approximate; individual indicator papers vary).
@@ -211,9 +211,11 @@
 
 /* Topic 4.3 — one-click pH checkpoints with contextual chemistry. */
 .aa-ph-presets{display:flex;gap:9px;flex-wrap:wrap;margin:8px 0 13px}
-.aa-ph-presets button{border:1px solid #b9d9c5;background:#f2f9f4;color:#317d5e;border-radius:8px;padding:10px 16px;font-weight:800;font-size:12px}
-.aa-ph-presets button.active{border-color:#2e9368;background:#1e8164;color:#fff}
-.aa-ph-presets button:hover{border-color:#3b9f73}
+/* Button fills and text colors are taken from the same pH stops as the slider. */
+.aa-ph-presets button{border:1px solid #0003;border-radius:8px;padding:10px 16px;font-weight:800;font-size:12px;cursor:pointer;transition:filter .15s ease,box-shadow .15s ease}
+.aa-ph-presets button.active{border-color:#18332d;box-shadow:0 0 0 2px #fff,0 0 0 4px #376457}
+.aa-ph-presets button:hover{filter:brightness(.96)}
+.aa-ph-presets button:focus-visible{outline:2px solid #205f78;outline-offset:4px}
 .aa-ph-explanation{margin-top:21px;background:#eff8f3;border-left:3px solid #4caa7e;border-radius:9px;padding:17px}
 .aa-ph-explanation strong{font-size:13px;color:#236f4f}
 .aa-ph-explanation p{font-size:12px;color:#567c66;line-height:1.8;margin:8px 0 12px}
