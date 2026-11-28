@@ -31,23 +31,25 @@ function diagram3d(atoms,ax,ay,zoom){
  return original.map(p=>({...p,x:350+p.x*scale,y:190-p.y*scale}));
 }
 function Atom({p,i,mode,selected,onPick,protonationLabel=null}){
- const [symbol,charge]=p.atom,rad=mode==='3d'?(symbol==='C'?12:14):symbol==='C'?9:12;
+ // Larger atom glyphs in both views, with circles scaled to keep labels clear.
+ const [symbol,charge]=p.atom,rad=mode==='3d'?(symbol==='C'?16:18):symbol==='C'?15:17;
+ const elementFontSize=symbol==='C'?15:16;
  const emphasized=Boolean(protonationLabel);
- const badgeWidth=emphasized?Math.max(43,protonationLabel.text.length*11+14):0;
+ const badgeWidth=emphasized?Math.max(50,protonationLabel.text.length*13+18):0;
  return <g onClick={()=>onPick(i)} role="button" tabIndex="0"
   aria-label={'Inspect atom '+(i+1)+': '+(protonationLabel?.group||symbol)+(protonationLabel?' '+protonationLabel.text:(charge?' charged '+charge:''))}
   onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();onPick(i);}}}
   className="aa-atom" style={{cursor:'pointer'}}>
   {emphasized?<g>
-   <rect x={p.x-badgeWidth/2} y={p.y-14} width={badgeWidth} height="28" rx="9"
+   <rect x={p.x-badgeWidth/2} y={p.y-17} width={badgeWidth} height="34" rx="9"
      fill="#e0f4e9" stroke={selected===i?"#168360":"#63b08c"} strokeWidth={selected===i?3:2}/>
-   <text x={p.x} y={p.y+5} textAnchor="middle" fontSize="15" fontWeight="800" fill="#17684d">{protonationLabel.text}</text>
+   <text x={p.x} y={p.y+6} textAnchor="middle" fontSize="18" fontWeight="800" fill="#17684d">{protonationLabel.text}</text>
   </g>:<g>
    <circle cx={p.x} cy={p.y} r={rad+(selected===i?5:2)} fill={selected===i?'#d3edcf':'transparent'} stroke={selected===i?'#2d946d':'none'} strokeWidth="2"/>
    <circle cx={p.x} cy={p.y} r={rad} fill={getColor(symbol)} stroke="#fff" strokeWidth="1.7"/>
    {mode==='3d'&&<circle cx={p.x-3} cy={p.y-4} r="3.2" fill="#fff" fillOpacity=".40"/>}
-   <text x={p.x} y={p.y+4} textAnchor="middle" fontSize={symbol==='C'?10:11} fontWeight="800" fill="#fff">{symbol}</text>
-   {charge!==0&&<text x={p.x+rad-1} y={p.y-rad+2} fontSize="12" fill="#2e5960" fontWeight="900">{chargeSign(charge)}</text>}
+   <text x={p.x} y={p.y+5} textAnchor="middle" fontSize={elementFontSize} fontWeight="800" fill="#fff">{symbol}</text>
+   {charge!==0&&<text x={p.x+rad-1} y={p.y-rad+2} fontSize="15" fill="#2e5960" fontWeight="900">{chargeSign(charge)}</text>}
   </g>}
  </g>;
 }
