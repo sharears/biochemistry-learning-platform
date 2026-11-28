@@ -29,7 +29,7 @@ export const parts = [
 ].map((part,index)=>({
   ...part, number:index+1,
   chapters:part.chapters.map(([number,title])=>({
-    number, title, partId:part.id, implemented:number===4,
+    number, title, partId:part.id, implemented:[4,7,8].includes(number),
     pathway:number===14?'glycolysis':null
   }))
 }));

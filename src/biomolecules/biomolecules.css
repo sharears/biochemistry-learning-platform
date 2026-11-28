@@ -1,0 +1,59 @@
+/* Guided carbohydrate and lipid teaching modules, chapters 7 and 8.
+ * These extend the established Chapter 4 course layout (aa-* classes).
+ */
+.bm-chapter{min-width:0}
+.bm-chapter .aa-point p{line-height:1.85}
+.bm-chapter .aa-topic-cards button:last-child:nth-child(odd){grid-column:auto}
+.bm-case{border-radius:13px;border:1px solid #d9e9d7;background:#f6faf2;padding:21px 23px;margin:20px 0 25px}
+.bm-case h3{font-size:18px;margin:10px 0 9px;color:#315e48}
+.bm-case p{font-size:13px;line-height:1.8;color:#608275}
+.bm-question{margin-bottom:26px;border-radius:11px;border:1px solid #dbe8df;background:#fff;padding:22px}
+.bm-lab{border:1px solid #d7e8de;border-radius:14px;padding:22px;background:#fff;margin:17px 0 25px;color:#2f6751;min-width:0}
+.bm-lab h3{font-size:21px;color:#286448;margin:9px 0}
+.bm-lab p{font-size:12px;line-height:1.8;color:#618073}
+.bm-lab-top{display:flex;gap:16px;justify-content:space-between;align-items:flex-start}
+.bm-lab-top>div:first-child{flex:1}
+.bm-controls{display:flex;gap:16px;align-items:end;flex-wrap:wrap;margin:18px 0}
+.bm-lab-top .bm-controls{margin:0}
+.bm-controls label{display:flex;flex-direction:column;gap:8px;min-width:165px;font-size:12px;font-weight:750;color:#4c795e}
+.bm-controls label:has(input[type="range"]){flex:1;min-width:210px}
+.bm-controls label b{color:#187f5d}
+.bm-controls select{padding:10px 13px;min-height:40px;max-width:100%;border-radius:9px;border:1px solid #bdd9c7;background:#fff;color:#2e6b4e;font-size:12px}
+.bm-controls input[type="range"]{accent-color:#2c986b;width:100%;min-height:30px}
+.bm-figure-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin:19px 0}
+.bm-figure{min-width:0;border-radius:12px;border:1px solid #d9e9df;background:#f7fbf8;padding:14px;text-align:center}
+.bm-figure>strong{display:block;text-align:center;color:#377b59;font-size:12px;margin:2px 0 14px}
+.bm-sugar-svg{display:block;width:100%;height:auto;max-height:340px;color:#416e5c}
+.bm-wide-svg{display:block;width:100%;height:auto;max-height:320px;color:#416e5c}
+.bm-figure-caption{font-size:11px;color:#719180;display:block;margin-top:6px;line-height:1.55}
+.bm-insight{display:block;background:#eaf6ee;border:1px solid #d7e9dc;border-radius:10px;padding:15px 17px;color:#377456;font-size:12px;line-height:1.8;margin-top:14px}
+.bm-insight strong{display:block;font-size:13px;color:#236f4e;margin-bottom:5px}
+.bm-insight p{font-size:12px;margin:0;color:#547c63;line-height:1.8}
+.bm-insight b{font-weight:800;color:#3c785a}
+.bm-choice-row{display:flex;flex-wrap:wrap;gap:8px;margin:17px 0}
+.bm-choice-row button{background:#f5faf7;border:1px solid #c6ddcf;padding:9px 12px;min-height:40px;border-radius:9px;color:#498061;font-size:12px;font-weight:750;cursor:pointer}
+.bm-choice-row button.active,.bm-choice-row button[aria-pressed="true"]{background:#207f5f;border-color:#207f5f;color:#fff}
+.bm-choice-row button:focus-visible,.bm-controls select:focus-visible{outline:3px solid #9dd9b2;outline-offset:2px}
+.bm-result-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin:14px 0}
+.bm-result-grid>div{border:1px solid #d7e9dd;border-radius:10px;padding:13px 15px;display:grid;gap:7px;min-width:0;background:#f6fbf7}
+.bm-result-grid small{color:#7a9c82;font-size:10px;letter-spacing:.08em;font-weight:800}
+.bm-result-grid strong{font-size:16px;color:#267551;overflow-wrap:anywhere}
+.bm-disclaimer{font-size:11px!important;color:#82978b!important;line-height:1.75!important;margin:15px 0 0}
+.bm-interactive-intro{margin:12px 0 14px}
+.bm-lab .aa-label{margin-bottom:6px}
+@media(max-width:1024px){
+ .bm-lab-top{display:block}
+ .bm-lab-top .bm-controls{margin:18px 0 0}
+}
+@media(max-width:680px){
+ .bm-lab{padding:15px}
+ .bm-figure-grid{grid-template-columns:1fr}
+ .bm-figure{padding:9px}
+ .bm-controls{display:grid;grid-template-columns:1fr}
+ .bm-controls label{min-width:0;width:100%}
+ .bm-result-grid{grid-template-columns:1fr}
+ .bm-case{padding:16px}
+ .bm-question{padding:16px}
+ .bm-choice-row button{flex:1 1 auto}
+ .bm-lab h3{font-size:19px}
+}

@@ -117,3 +117,26 @@ Topic 4.3 now teaches charge and structure in the **same existing interactive pH
 Important: the molecular viewer shows one representative **predominant microstate**, which has an integer formal charge, while the reported average net charge is **fractional**, weighted over an ensemble. Acidic/basic site pKa values are approximate and assumed independent. The 3D coordinates are illustrative conformers and are *not* reoptimized when protonation changes. Arg and His ring annotations depict one possible formal resonance/tautomer representation.
 
 Code: \`src/amino/protonation.js\`, \`src/amino/IonizationStructure.jsx\`, and \`src/amino/ChargeCalculation.jsx\`. Additional calculations and atom mapping tests are in \`scripts/check-content.mjs\`.
+
+
+## v0.6 — Chapters 7 and 8: carbohydrates, lipids and membranes
+
+The Part II curriculum now has three full chapter modules: **Chapter 4 Amino Acids**, **Chapter 7 Carbohydrates and Glycobiology**, and **Chapter 8 Lipids and Biological Membranes**.
+
+**Chapter 7 (four topics):**
+- Monosaccharides and stereochemistry: compare D-glucose, D-mannose and D-galactose, show Fischer/Haworth conventions, and toggle alpha/beta anomers.
+- Glycosidic linkages: compare maltose, cellobiose, lactose and sucrose, with linkage naming and reducing-end behavior.
+- Polysaccharides: interactive structural comparison of amylose, amylopectin, glycogen and cellulose.
+- Glycoconjugates: inspect N-linked and O-linked glycoproteins, proteoglycans and glycolipids.
+
+**Chapter 8 (four topics):**
+- Fatty acids and lipid classes: compare saturated, cis/trans unsaturated chains and common lipid classes.
+- Membrane organization: explore tail saturation and temperature in a conceptual bilayer-packing schematic.
+- Membrane transport: change solute concentrations to reason about passive and energy-coupled uphill transport.
+- Membrane proteins: compare single-pass, multipass, peripheral and lipid-anchored topologies.
+
+Every topic has five stages: **Learn** (substantive core content, a biochemistry case study, embedded guided interactive), **Explore** (free interactive + investigation prompt), **Practice** (three questions with feedback), **Apply** (a chemical reasoning exercise), and **Review** (self-assessment). Stage progress, practice answers, applications and review checkboxes persist in the same browser-local storage contract as Chapter 4. The textbook, Home, Practice and My Progress pages link to the newly implemented chapters.
+
+The structural and membrane diagrams are educational schematics. They are not atom-complete structures or numerical simulations of membrane physical properties. The course still contains 28 chapters; Chapters 17 and 18 about carbohydrate/lipid **metabolism** remain separate planned modules.
+
+Code lives in \`src/biomolecules/\` and is checked by \`scripts/check-content.mjs\`.

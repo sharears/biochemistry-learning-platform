@@ -4,6 +4,8 @@ import {aminoAcids,aminoLesson,netCharge,isoelectricPoint,phPresets,explainCharg
 import {chargeBreakdown,protonationAtomLabels,TITRATABLE_ATOM_INDICES,displayCharge} from '../src/amino/protonation.js';
 import {moleculeGraphs} from '../src/amino/moleculeGraphs.js';
 import {parts,chapters,pathwayCatalog,metabolicCategories} from '../src/courseCatalog.js';
+import {biomoleculeLessons,chapterIntroductions} from '../src/biomolecules/biomoleculeLessons.js';
+import {readFileSync} from 'node:fs';
 import {glycolysis,sumEnergy} from '../src/metabolism/pathways.js';
 
 assert.equal(parts.length,6,'Six textbook parts');
@@ -141,3 +143,44 @@ assert.equal(protonationAtomLabels('H',2)[1].text,'NH⁺');
 assert(chargeBreakdown('G',2.34).nearTransition,'pKa midpoint requires population note');
 assert.equal(displayCharge(0,2),'0.00');
 console.log('Ionization structure checks passed: nine amino acids, 2D/3D atom mappings, pH-dependent species, and group-level math.');
+
+
+/* Chapters 7 and 8 now have complete, topic-specific five-stage lessons. */
+for(const number of [7,8]){
+ const chapter=chapters.find(ch=>ch.number===number);
+ assert(chapter?.implemented,'Chapters 7 and 8 must be marked available');
+ assert(chapterIntroductions[number]?.length>50,'Chapter description missing');
+ const topics=topicsForChapter(number);
+ assert.equal(topics.length,4,'Four topics per new chapter');
+ for(const topic of topics){
+  assert(topic.implemented,'Topic '+topic.number+' should be marked available');
+  const lesson=biomoleculeLessons[number]?.[topic.id];
+  assert(lesson,'Missing lesson for '+topic.number+' '+topic.id);
+  assert(lesson.intro.length>=120,'Detailed intro missing '+topic.id);
+  assert(lesson.points.length>=5,'At least five explanatory learning ideas per topic '+topic.id);
+  assert(lesson.points.every(p=>p.length>=70),'Each core idea must be substantive '+topic.id);
+  assert(lesson.caseStudy?.text.length>70,'Real-world connection missing '+topic.id);
+  assert(lesson.callout?.length>70,'Guided interactive explanation missing '+topic.id);
+  assert(lesson.explore?.length>70,'Open-ended investigation missing '+topic.id);
+  assert(lesson.questions.length>=3,'Practice set missing '+topic.id);
+  for(const q of lesson.questions){
+   assert(q.options?.length===4&&Number.isInteger(q.correct)&&q.correct>=0&&q.correct<4,'Invalid multiple-choice question '+topic.id);
+   assert(q.why?.length>35,'Explanatory feedback required '+topic.id);
+  }
+  assert(lesson.apply?.title&&lesson.apply?.prompt&&lesson.apply?.why,'Applied exercise missing '+topic.id);
+  assert(['choice','number'].includes(lesson.apply.kind),'Unsupported application type '+topic.id);
+  if(lesson.apply.kind==='choice')assert(lesson.apply.options.length===4&&Number.isInteger(lesson.apply.correct));
+  if(lesson.apply.kind==='number')assert(Number.isFinite(lesson.apply.answer)&&lesson.apply.tolerance===0);
+  assert(lesson.key.length>=4,'Review checklist needs four takeaways '+topic.id);
+ }
+}
+const interactives=readFileSync(new URL('../src/biomolecules/BiomoleculeInteractive.jsx',import.meta.url),'utf8');
+for(const chapterNumber of [7,8])for(const topic of topicsForChapter(chapterNumber)){
+ assert(interactives.includes("if(topicId==='"+topic.id+"')"),'No interactive for '+topic.number);
+}
+const biomoleculeUI=readFileSync(new URL('../src/biomolecules/BiomoleculeChapter.jsx',import.meta.url),'utf8');
+for(const stage of learningStages)assert(biomoleculeUI.includes("stage==='"+stage.id+"'"),'Stage missing in new chapter UI: '+stage.id);
+assert(chapters.find(ch=>ch.number===4).implemented,'Existing amino acid chapter must remain available');
+assert(!chapters.find(ch=>ch.number===17).implemented,'Metabolic carbohydrate chapter 17 remains planned');
+assert(!chapters.find(ch=>ch.number===18).implemented,'Metabolic lipid chapter 18 remains planned');
+console.log('Biomolecule chapter checks passed: 8 topics, 40 learning stages, 8 embedded interactives, 24 practice questions and 8 applications.');

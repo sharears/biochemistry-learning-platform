@@ -48,8 +48,8 @@ const chapterTopics={
 };
 const slug=s=>s.toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 export const topicsForChapter=number=>(chapterTopics[Number(number)]||[]).map((item,i)=>(
-  typeof item==='string'?{id:slug(item),number:Number(number)+'.'+(i+1),title:item,implemented:false}:
-  {...item,number:Number(number)+'.'+(i+1),implemented:Number(number)===4}
+  typeof item==='string'?{id:slug(item),number:Number(number)+'.'+(i+1),title:item,implemented:[4,7,8].includes(Number(number))}:
+  {...item,number:Number(number)+'.'+(i+1),implemented:[4,7,8].includes(Number(number))}
 ));
 export const findTopic=(chapter,topicId)=>topicsForChapter(chapter).find(t=>t.id===topicId);
 export const getTopicCount=()=>Object.values(chapterTopics).reduce((n,topics)=>n+topics.length,0);
