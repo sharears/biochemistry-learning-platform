@@ -1,4 +1,4 @@
-import React,{useMemo,useRef,useState} from 'react';
+import React,{useEffect,useMemo,useRef,useState} from 'react';
 import {aminoByLetter} from './aminoData.js';
 import {moleculeGraphs} from './moleculeGraphs.js';
 
@@ -74,6 +74,10 @@ export default function MoleculeViewer({one='A',compact=false,viewMode=null,hide
  const [zoom,setZoom]=useState(1),[selected,setSelected]=useState(null);
  const dragging=useRef(null);
  const {atoms,bonds}=useMemo(()=>atomsFor(one),[one]);
+ // Clear selections when changing molecules, including switching from a
+ // larger molecule to glycine with fewer indexed atoms.
+ useEffect(()=>setSelected(null),[one]);
+ const safeSelected=selected!==null&&selected>=0&&selected<atoms.length?selected:null;
  const coords=mode==='2d'?diagram2d(atoms):diagram3d(atoms,angles.x,angles.y,zoom);
  const amino=aminoByLetter[one]||aminoByLetter.A;
  const ordered=[...coords.keys()].sort((a,b)=>coords[a].z-coords[b].z);
@@ -100,7 +104,7 @@ export default function MoleculeViewer({one='A',compact=false,viewMode=null,hide
        tabIndex={mode==='3d'?0:undefined} style={{touchAction:mode==='3d'?'none':'auto'}}>
        <rect width="700" height="380" rx="16" fill="#f8fbf9"/>
        <g>{bonds.map((bond,i)=><Bond key={i} from={coords[bond[0]]} to={coords[bond[1]]} bond={bond} mode={mode}/>)}</g>
-       <g>{ordered.map(i=><Atom key={i} i={i} p={coords[i]} mode={mode} selected={selected} onPick={setSelected} protonationLabel={protonationLabels?.[i]}/>)}</g>
+       <g>{ordered.map(i=><Atom key={i} i={i} p={coords[i]} mode={mode} selected={safeSelected} onPick={setSelected} protonationLabel={protonationLabels?.[i]}/>)}</g>
      </svg>
      <span className="aa-mol-watermark">{mode==='3d'?'Computational conformer · drag to rotate':'Atom and bond connectivity · tap atoms'}</span>
    </div>
@@ -108,7 +112,7 @@ export default function MoleculeViewer({one='A',compact=false,viewMode=null,hide
      <div className="aa-element-legend"><span><i style={{background:getColor('C')}}/>C</span><span><i style={{background:getColor('N')}}/>N</span><span><i style={{background:getColor('O')}}/>O</span><span><i style={{background:getColor('S')}}/>S</span></div>
      {mode==='3d'&&<div className="aa-rotation-buttons"><button onClick={()=>setZoom(z=>clamp(z-.12,.6,1.7))} aria-label="Zoom molecule out">−</button><button onClick={()=>setZoom(z=>clamp(z+.12,.6,1.7))} aria-label="Zoom molecule in">+</button><button onClick={()=>{setAngles({x:-.35,y:.55});setZoom(1);}} title="Reset 3D view">↺</button></div>}
    </div>
-   {selected!==null&&<p className="aa-atom-detail" aria-live="polite">Atom {selected+1}: <strong>{protonationLabels?.[selected]?.text||atoms[selected][0]}</strong>{protonationLabels?.[selected]?' · '+protonationLabels[selected].group:(atoms[selected][1]!==0?' · formal charge '+(atoms[selected][1]>0?'+':'')+atoms[selected][1]:'')} · bonded to {bonds.filter(b=>b[0]===selected||b[1]===selected).length} heavy atom(s). {protonationLabels?'Hydrogens on highlighted ionizable groups are shown in their labels; other hydrogens are implicit.':'Hydrogen atoms are implicit.'}</p>}
+   {safeSelected!==null&&<p className="aa-atom-detail" aria-live="polite">Atom {safeSelected+1}: <strong>{protonationLabels?.[safeSelected]?.text||atoms[safeSelected][0]}</strong>{protonationLabels?.[safeSelected]?' · '+protonationLabels[safeSelected].group:(atoms[safeSelected][1]!==0?' · formal charge '+(atoms[safeSelected][1]>0?'+':'')+atoms[safeSelected][1]:'')} · bonded to {bonds.filter(b=>b[0]===safeSelected||b[1]===safeSelected).length} heavy atom(s). {protonationLabels?'Hydrogens on highlighted ionizable groups are shown in their labels; other hydrogens are implicit.':'Hydrogen atoms are implicit.'}</p>}
    <p className="aa-mol-disclaimer">{protonationLabels?'Predominant protonation states at the selected pH are shown as labels at the actual titratable atoms. Other hydrogens remain implicit. 3D coordinates do not re-optimize with pH; this is a structural teaching model.':'Free amino acid, illustrated near neutral pH. Hydrogen atoms are implicit; 3D geometry is computational and schematic, not experimental. Titrating groups and peptide-bound residues can have different protonation.'}</p>
  </section>;
 }
