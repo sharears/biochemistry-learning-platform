@@ -35,6 +35,36 @@ function ProfilePicker({selected,onSelect,showFilter=true}){
   <div className="aa-profile"><div><span className="aa-label">{current.three} · {current.category.toUpperCase()}</span><h4>{current.name}</h4><p>{current.property}. {current.note}</p></div><div><span className="aa-label">SIDE CHAIN</span><strong>{current.sidechain}</strong></div></div>
  </div>;
 }
+// Match the pH 0–14 color stops in amino.css (approximate universal indicator colors).
+const phIndicatorStops=[
+  [0,'#d83a3a'],[2,'#e64a35'],[4,'#ef8332'],[5,'#f4c341'],
+  [6,'#e3d943'],[7,'#39a94d'],[8,'#28a698'],[10,'#247bb5'],
+  [11,'#4054b4'],[12,'#6948ab'],[14,'#903da7']
+];
+function phIndicatorColor(ph){
+  const value=Math.max(0,Math.min(14,ph));
+  const endIndex=phIndicatorStops.findIndex(([stop])=>value<=stop);
+  if(endIndex<=0)return phIndicatorStops[0][1];
+  const [endPh,endHex]=phIndicatorStops[endIndex];
+  const [startPh,startHex]=phIndicatorStops[endIndex-1];
+  const mix=(value-startPh)/(endPh-startPh);
+  const rgb=[1,3,5].map(i=>{
+    const a=parseInt(startHex.slice(i,i+2),16);
+    const b=parseInt(endHex.slice(i,i+2),16);
+    return Math.round(a+(b-a)*mix).toString(16).padStart(2,'0');
+  });
+  return '#'+rgb.join('');
+}
+function phIndicatorTextColor(color){
+  const linear=[1,3,5].map(i=>{
+    const channel=parseInt(color.slice(i,i+2),16)/255;
+    return channel<=0.04045?channel/12.92:((channel+0.055)/1.055)**2.4;
+  });
+  const luminance=0.2126*linear[0]+0.7152*linear[1]+0.0722*linear[2];
+  // Pick whichever of near-black or white has the stronger WCAG contrast ratio.
+  const darkLuminance=0.021;
+  return (luminance+0.05)/(darkLuminance+0.05) > 1.05/(luminance+0.05)?'#18332d':'#ffffff';
+}
 function ChargeLab(){
  const [chosen,setChosen]=useState('G'),[ph,setPh]=useState(7);
  const model=ionizationExamples[chosen];
@@ -44,11 +74,11 @@ function ChargeLab(){
  const explanation=explainChargeAtPh(chosen,ph);
  return <div className="aa-lab">
   <div className="aa-lab-title"><div><span className="aa-label">INTERACTIVE ACID–BASE LAB</span><h3>Investigate charge as pH changes</h3><p>Choose a free amino acid and adjust pH. The model estimates its average net charge from ionizable-group pKa values.</p></div>
-    <div className="aa-ph-number">pH <strong>{ph.toFixed(1)}</strong></div></div>
+    <div className="aa-ph-number" style={{backgroundColor:phIndicatorColor(ph),color:phIndicatorTextColor(phIndicatorColor(ph))}}>pH <strong>{ph.toFixed(1)}</strong></div></div>
   <label className="aa-input-label" htmlFor="aa-species">Free amino acid</label>
   <select id="aa-species" value={chosen} onChange={e=>setChosen(e.target.value)}>{Object.keys(ionizationExamples).map(k=><option key={k} value={k}>{aminoByLetter[k].name}</option>)}</select>
   <label className="aa-input-label" htmlFor="aa-ph-range">Solution pH</label>
-  <div className="aa-ph-presets" role="group" aria-label="Choose a pH preset">{phPresets.map(value=><button key={value} className={ph===value?'active':''} aria-pressed={ph===value} onClick={()=>setPh(value)}>pH {value}</button>)}</div>
+  <div className="aa-ph-presets" role="group" aria-label="Choose a pH preset">{phPresets.map(value=><button key={value} className={ph===value?'active':''} aria-pressed={ph===value} style={{backgroundColor:phIndicatorColor(value),color:phIndicatorTextColor(phIndicatorColor(value))}} onClick={()=>setPh(value)}>pH {value}</button>)}</div>
   <input id="aa-ph-range" type="range" min="0" max="14" step=".1" value={ph} onChange={e=>setPh(Number(e.target.value))}/>
   <div className="aa-range-scale"><span>Acidic (0)</span><span>Neutral (7)</span><span>Basic (14)</span></div>
   <IonizationStructure one={chosen} ph={ph}/>
